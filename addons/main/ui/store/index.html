@@ -95,7 +95,7 @@
             position: relative;
             z-index: 2;
             display: grid;
-            grid-template-rows: 92px minmax(0, 1fr) 86px;
+            grid-template-rows: 92px minmax(0, 1fr) minmax(72px, auto);
             gap: 14px;
             width: 100vw;
             height: 100vh;
@@ -251,13 +251,15 @@
         }
 
         .operator-panel {
-            grid-template-rows: auto minmax(0, 0.92fr) minmax(0, 1.1fr) minmax(0, 0.72fr);
+            grid-template-rows: auto minmax(0, 0.72fr) minmax(0, 1.72fr) minmax(0, 0.44fr);
             min-height: 0;
-            overflow: hidden;
+            overflow: hidden auto;
+            overscroll-behavior: contain;
             padding: 0;
             background: transparent;
             box-shadow: none;
             clip-path: none;
+            scrollbar-gutter: stable;
         }
 
         .operator-section {
@@ -273,6 +275,12 @@
                 rgba(12, 22, 32, 0.72);
             box-shadow: 0 18px 42px rgba(0, 0, 0, 0.34);
             clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+        }
+
+        .operator-section > .panel-head,
+        .operator-section > .summary-grid,
+        .operator-section > .kit-tools {
+            flex: 0 0 auto;
         }
 
         .panel-head {
@@ -312,7 +320,9 @@
             flex-direction: column;
             gap: 7px;
             overflow: auto;
-            padding: 2px 4px 2px 0;
+            overscroll-behavior: contain;
+            padding: 2px 10px 14px 0;
+            scrollbar-gutter: stable;
         }
 
         .category {
@@ -409,7 +419,9 @@
             align-content: start;
             min-height: 0;
             overflow: auto;
-            padding: 2px 6px 4px 0;
+            overscroll-behavior: contain;
+            padding: 2px 10px 18px 0;
+            scrollbar-gutter: stable;
         }
 
         .armory-card {
@@ -692,7 +704,10 @@
             flex-direction: column;
             gap: 8px;
             overflow: auto;
-            padding: 2px 4px 2px 0;
+            overscroll-behavior: contain;
+            padding: 2px 10px 24px 0;
+            scroll-padding-bottom: 24px;
+            scrollbar-gutter: stable;
         }
 
         .loadout-grid {
@@ -702,7 +717,10 @@
             gap: 8px;
             min-height: 0;
             overflow: auto;
-            padding-right: 4px;
+            overscroll-behavior: contain;
+            padding: 2px 10px 22px 0;
+            scroll-padding-bottom: 22px;
+            scrollbar-gutter: stable;
         }
 
         .slot {
@@ -769,6 +787,7 @@
         .kit-line {
             position: relative;
             display: grid;
+            flex: 0 0 auto;
             grid-template-columns: minmax(0, 1fr) auto;
             gap: 10px;
             align-items: center;
@@ -966,12 +985,15 @@
 
         .bottom-actions {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             align-items: center;
             justify-content: flex-end;
+            min-width: 0;
         }
 
         .bottom-actions .action-btn {
+            flex: 0 0 auto;
             min-width: 126px;
             min-height: 52px;
             font-size: 16px;
@@ -1009,6 +1031,68 @@
 
             .panel-title h2 {
                 font-size: 26px;
+            }
+        }
+
+        @media (max-height: 860px) {
+            .shell {
+                grid-template-rows: 78px minmax(0, 1fr) minmax(64px, auto);
+                gap: 10px;
+                padding: 16px 22px 18px;
+            }
+
+            .topbar {
+                gap: 12px;
+            }
+
+            .brand {
+                padding: 12px 18px;
+            }
+
+            .brand h1 {
+                font-size: 34px;
+            }
+
+            .status-strip {
+                padding: 8px;
+            }
+
+            .stat-value {
+                margin-top: 3px;
+                font-size: 20px;
+            }
+
+            .layout,
+            .operator-panel {
+                gap: 10px;
+            }
+
+            .operator-section {
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .panel-title h2 {
+                font-size: 24px;
+            }
+
+            .summary-tile {
+                min-height: 56px;
+                padding: 8px;
+            }
+
+            .summary-tile .value {
+                margin-top: 4px;
+                font-size: 18px;
+            }
+
+            .actionbar {
+                gap: 10px;
+                padding: 10px;
+            }
+
+            .bottom-actions .action-btn {
+                min-height: 44px;
             }
         }
     </style>
