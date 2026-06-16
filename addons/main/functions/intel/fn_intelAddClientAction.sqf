@@ -1,6 +1,9 @@
 params [["_body", objNull, [objNull]]];
 
 if (!hasInterface) exitWith {};
+if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwner isNotEqualTo 0}) exitWith {
+    diag_log format ["[FLO][Intel] Rejected intel action sync from owner %1", remoteExecutedOwner];
+};
 if (isNull _body) exitWith {};
 if (_body getVariable ["FLO_Intel_ClientActionAdded", false]) exitWith {};
 

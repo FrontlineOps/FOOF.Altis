@@ -1,6 +1,9 @@
 params ["_success", "_message"];
 
 if (!hasInterface) exitWith {};
+if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwner isNotEqualTo 0}) exitWith {
+    diag_log format ["[FLO][FOB] Rejected deployment result from owner %1", remoteExecutedOwner];
+};
 
 [_message, ["error", "success"] select _success, "Deployment"] call FLO_fnc_notify;
 

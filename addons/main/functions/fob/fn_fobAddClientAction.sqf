@@ -1,6 +1,9 @@
 params [["_fob", objNull, [objNull]]];
 
 if (!hasInterface) exitWith {};
+if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwner isNotEqualTo 0}) exitWith {
+    diag_log format ["[FLO][FOB] Rejected FOB action sync from owner %1", remoteExecutedOwner];
+};
 if (isNull _fob) exitWith {};
 
 [_fob] call FLO_fnc_fobSyncClientMarker;

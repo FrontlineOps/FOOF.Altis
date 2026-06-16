@@ -51,11 +51,14 @@ FLO_FOBs set [
         ["respawnEnabled", _config get "respawnEnabled"],
         ["respawnHandle", []],
         ["enemyDisableRadius", _config get "enemyDisableRadius"],
-        ["createdAt", diag_tickTime]
+        ["createdAt", diag_tickTime],
+        ["actionJipId", ""]
     ]
 ];
 
-[_fob] remoteExecCall ["FLO_fnc_fobAddClientAction", 0, _fob];
+private _record = FLO_FOBs get _id;
+private _actionJipId = [_fob] remoteExecCall ["FLO_fnc_fobAddClientAction", 0, _fob];
+_record set ["actionJipId", _actionJipId];
 [_id] call FLO_fnc_fobSyncRespawn;
 [_side] call FLO_fnc_spawnEnsureSideRespawn;
 

@@ -36,7 +36,7 @@
 private _targetObject = objNull;
 private _buildMenuDisabled = false;
 
-if (typeName _this == typeName []) then {
+if (typeName _this isEqualTo "ARRAY") then {
     if (count _this > 0) then {
         _targetObject = _this select 0;
         if (count _this > 1) then {
@@ -656,17 +656,15 @@ _keyDown = (findDisplay 46) displayAddEventHandler ["KeyDown", {
 };
 
 // Display camera controls info
-private _bKeyText = if (!IDS_Logistics_BuildMenuDisabled) then {
+private _bKeyText = [
+    "<t>- <t color='#DDDDDD'>B key</t> - <t color='#888888'>Build menu disabled</t></t><br/>",
     "<t>- <t color='#DDDDDD'>B key</t> - Open build menu</t><br/>"
-} else {
-    "<t>- <t color='#DDDDDD'>B key</t> - <t color='#888888'>Build menu disabled</t></t><br/>"
-};
+] select (!IDS_Logistics_BuildMenuDisabled);
 
-private _shiftKeyText = if (!IDS_Logistics_BuildMenuDisabled) then {
+private _shiftKeyText = [
+    "<t>- <t color='#DDDDDD'>SHIFT + Left click</t> - <t color='#888888'>Delete entity disabled</t></t><br/>",
     "<t>- <t color='#DDDDDD'>SHIFT + Left click</t> - Delete entity</t><br/>"
-} else {
-    "<t>- <t color='#DDDDDD'>SHIFT + Left click</t> - <t color='#888888'>Delete entity disabled</t></t><br/>"
-};
+] select (!IDS_Logistics_BuildMenuDisabled);
 
 private _controlsInfo = format [
     "<t color='#AAFFAA' size='1.0'>CONTROLS</t><br/><t align='left'>" +
