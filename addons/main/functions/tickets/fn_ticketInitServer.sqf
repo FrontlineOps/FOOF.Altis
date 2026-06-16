@@ -15,7 +15,16 @@ FLO_TicketConsumedTotal = createHashMapFromArray [
     ["EAST", 0]
 ];
 
+FLO_TicketDeathStates = createHashMap;
 FLO_TicketRevision = 0;
+
+FLO_TicketEntityKilledEh = addMissionEventHandler [
+    "EntityKilled",
+    {
+        params ["_unit", "_killer", "_instigator", "_useEffects"];
+        [_unit, _killer, _instigator, _useEffects] call FLO_fnc_ticketHandleDeath;
+    }
+];
 
 FLO_TicketEntityRespawnedEh = addMissionEventHandler [
     "EntityRespawned",

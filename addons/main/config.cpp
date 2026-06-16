@@ -138,6 +138,11 @@ class CfgRemoteExec {
             jip = 0;
         };
 
+        class FLO_fnc_spawnConfirmAssignment {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
         class FLO_fnc_storeApplyKit {
             allowedTargets = 1;
             jip = 0;

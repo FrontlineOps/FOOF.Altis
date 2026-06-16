@@ -65,6 +65,7 @@ private _ticketLocked = _ticketBalance <= 0;
 
 private _uid = getPlayerUID _player;
 private _restoredPersistence = false;
+private _sideKey = [_side] call FLO_fnc_objectiveSideKey;
 
 if ((_uid isNotEqualTo "") && {_uid in FLO_PersistencePlayerRecords}) then {
     _restoredPersistence = [_uid, _owner] call FLO_fnc_persistenceApplyPlayerToOwner;
@@ -81,18 +82,34 @@ if (_restoredPersistence) exitWith {
 if ((_uid isNotEqualTo "") && {_uid in FLO_SpawnPlayerAssignments}) exitWith {
     private _payload = FLO_SpawnPlayerAssignments get _uid;
 
-    _player setVariable ["FLO_Spawn_AssignedCellId", _payload # 3, true];
-    _payload remoteExecCall ["FLO_fnc_spawnApplyAssignment", _owner];
+    if ((_payload # 2) isNotEqualTo _sideKey) then {
+        FLO_SpawnPlayerAssignments deleteAt _uid;
+        _player setVariable ["FLO_Spawn_ResetBeforeAssignment", true];
 
-    diag_log format [
-        "[FLO][Spawn] Resent deployment assignment for %1 player %2 cell=%3",
-        [_side] call FLO_fnc_objectiveSideKey,
-        name _player,
-        _payload # 3
-    ];
+        diag_log format [
+            "[FLO][Spawn] Cleared stale %1 deployment assignment for player %2 now on %3",
+            _payload # 2,
+            name _player,
+            _sideKey
+        ];
+
+        [_player, _attempt + 1, _requestOwner] call FLO_fnc_spawnRequestAssignment;
+    } else {
+        private _resetPlayerState = _player getVariable ["FLO_Spawn_ResetBeforeAssignment", false];
+        private _clientPayload = +_payload;
+        _clientPayload pushBack _resetPlayerState;
+
+        _player setVariable ["FLO_Spawn_AssignedCellId", _payload # 3, true];
+        _clientPayload remoteExecCall ["FLO_fnc_spawnApplyAssignment", _owner];
+
+        diag_log format [
+            "[FLO][Spawn] Resent deployment assignment for %1 player %2 cell=%3",
+            _sideKey,
+            name _player,
+            _payload # 3
+        ];
+    };
 };
-
-private _sideKey = [_side] call FLO_fnc_objectiveSideKey;
 
 if !(_sideKey in FLO_DeploymentZones) then {
     throw format ["[FLO][Spawn] Missing deployment zone for side %1; zones=%2", _sideKey, keys FLO_DeploymentZones];
@@ -117,6 +134,9 @@ private _spawnATL = [_cell, _slot, typeOf _player, true] call FLO_fnc_spawnFindL
 private _spawnASL = ATLToASL _spawnATL;
 private _dir = _zone get "dir";
 private _payload = [_spawnASL, _dir, _sideKey, _cellId];
+private _resetPlayerState = _player getVariable ["FLO_Spawn_ResetBeforeAssignment", false];
+private _clientPayload = +_payload;
+_clientPayload pushBack _resetPlayerState;
 
 _player setVariable ["FLO_Spawn_AssignedCellId", _cellId, true];
 
@@ -124,7 +144,7 @@ if (_uid isNotEqualTo "") then {
     FLO_SpawnPlayerAssignments set [_uid, _payload];
 };
 
-_payload remoteExecCall ["FLO_fnc_spawnApplyAssignment", _owner];
+_clientPayload remoteExecCall ["FLO_fnc_spawnApplyAssignment", _owner];
 
 diag_log format [
     "[FLO][Spawn] Assigned %1 player %2 to deployment cell %3 slot=%4 pos=%5",

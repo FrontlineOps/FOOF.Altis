@@ -22,22 +22,23 @@ private _base = switch (_category) do {
 };
 
 if (_entryKind isEqualTo "vehicle") exitWith {
-    private _cfg = configFile >> "CfgVehicles" >> _className;
-    private _configCost = getNumber (_cfg >> "cost");
-    private _derived = ceil (_configCost / 20);
-
-    _base max _derived
+    [_className, _category] call FLO_fnc_storePriceVehicle
 };
 
 private _mass = 0;
+private _weaponCfg = configNull;
+private _itemKind = "";
 
 if (isClass (configFile >> "CfgWeapons" >> _className)) then {
-    private _cfg = configFile >> "CfgWeapons" >> _className;
-    _mass = getNumber (_cfg >> "ItemInfo" >> "mass");
+    _weaponCfg = configFile >> "CfgWeapons" >> _className;
+    _mass = getNumber (_weaponCfg >> "ItemInfo" >> "mass");
 
     if (_mass <= 0) then {
-        _mass = getNumber (_cfg >> "WeaponSlotsInfo" >> "mass");
+        _mass = getNumber (_weaponCfg >> "WeaponSlotsInfo" >> "mass");
     };
+
+    private _itemType = _className call BIS_fnc_itemType;
+    _itemKind = _itemType param [1, ""];
 };
 
 if (isClass (configFile >> "CfgMagazines" >> _className)) then {
@@ -51,5 +52,33 @@ if (isClass (configFile >> "CfgVehicles" >> _className)) then {
 };
 
 private _price = _base + (ceil (_mass / 6));
+
+if (!isNull _weaponCfg) then {
+    private _visionTraits = [_className] call FLO_fnc_storeGearVisionTraits;
+    private _hasNvg = _visionTraits get "hasNvg";
+    private _hasThermal = _visionTraits get "hasThermal";
+    private _thermalModeCount = _visionTraits get "thermalModeCount";
+    private _hasThermalResolution = _visionTraits get "hasThermalResolution";
+
+    if (_itemKind isEqualTo "NVGoggles") then {
+        _price = _price max 300;
+    };
+
+    if (_hasNvg && {_itemKind isNotEqualTo "NVGoggles"}) then {
+        _price = _price + 250;
+    };
+
+    if (_hasThermal) then {
+        private _thermalBase = switch (true) do {
+            case (_itemKind isEqualTo "NVGoggles"): { 3500 };
+            case (_category isEqualTo "attachments"): { 3000 };
+            default { 2800 };
+        };
+        private _thermalModeAdd = ((_thermalModeCount max 1) min 5) * 250;
+        private _thermalResolutionAdd = [0, 600] select _hasThermalResolution;
+
+        _price = (_price max 300) + _thermalBase + _thermalModeAdd + _thermalResolutionAdd;
+    };
+};
 
 5 max ((ceil (_price / 5)) * 5)

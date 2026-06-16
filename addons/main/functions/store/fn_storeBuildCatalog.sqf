@@ -18,6 +18,7 @@ private _itemsByCategory = createHashMap;
 
 private _seen = createHashMap;
 private _factionLower = toLower _factionClass;
+private _factionUsesVanillaGear = [_factionClass] call FLO_fnc_storeFactionUsesVanillaGear;
 
 {
     private _unitCfg = _x;
@@ -45,6 +46,8 @@ private _factionLower = toLower _factionClass;
     _linkedItems append getArray (_unitCfg >> "respawnItems");
 
     {
+        if (!_factionUsesVanillaGear && {[_x] call FLO_fnc_storeIsVanillaDefaultNvg}) then { continue };
+
         private _category = [_x] call FLO_fnc_storeCategoryForWeapon;
         [_itemsByCategory, _seen, _x, "gear", _category] call FLO_fnc_storeAppendCatalogItem;
     } forEach _linkedItems;

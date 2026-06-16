@@ -5,6 +5,7 @@ class Spawn {
     class spawnClientInit {};
     class spawnClientNeedsAssignment {};
     class spawnClientReady {};
+    class spawnConfirmAssignment {};
     class spawnEnsureSideRespawn {};
     class spawnFindLandPositionInCell {};
     class spawnInitServer {};

@@ -2231,6 +2231,12 @@
                         }
                     }
 
+                    if (event === "store::pendingVehicles") {
+                        state.pendingVehicles = payload.pendingVehicles || [];
+                        updateSummary();
+                        updatePlaceVehicleButton();
+                    }
+
                     if (event === "store::savedKits") {
                         state.savedKits = payload.kits || [];
                         renderSavedKits();
