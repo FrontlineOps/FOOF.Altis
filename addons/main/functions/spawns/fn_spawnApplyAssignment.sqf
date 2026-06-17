@@ -1,7 +1,7 @@
 params ["_spawnASL", "_dir", "_sideKey", "_cellId", ["_resetPlayerState", false, [false]]];
 
 if (!hasInterface) exitWith {};
-if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2}) exitWith {};
+if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwner isNotEqualTo 0}) exitWith {};
 if (isNull player) exitWith {};
 
 FLO_SpawnClientAssigned = true;

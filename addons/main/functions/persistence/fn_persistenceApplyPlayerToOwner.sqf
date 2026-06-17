@@ -106,6 +106,29 @@ if (("damage" in _record) && {(_record get "damage") >= 1}) exitWith {
     false
 };
 
+if ("loadout" in _record) then {
+    _unit setUnitLoadout (_record get "loadout");
+};
+
+if ("posASL" in _record) then {
+    _unit setPosASL (_record get "posASL");
+};
+
+if (("vectorDir" in _record) && {"vectorUp" in _record}) then {
+    _unit setVectorDirAndUp [_record get "vectorDir", _record get "vectorUp"];
+} else {
+    if ("dir" in _record) then {
+        _unit setDir (_record get "dir");
+    };
+};
+
+if ("damage" in _record) then {
+    _unit setDamage (_record get "damage");
+};
+
+_unit setVariable ["FLO_Spawn_Assigned", true, true];
+_unit setVariable ["FLO_Persistence_Loaded", true, true];
+
 if ("assignedCellId" in _record) then {
     _unit setVariable ["FLO_Spawn_AssignedCellId", _assignedCellId, true];
 };

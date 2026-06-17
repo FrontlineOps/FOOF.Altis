@@ -425,7 +425,11 @@ if (_minLinkedCells isEqualTo 999999) then {
 };
 
 private _generationMs = (diag_tickTime - _generationT0) * 1000;
-private _clusterAvgStructures = [0, _clusterStructuresTotal / _clusterTerrainScans] select (_clusterTerrainScans > 0);
+private _clusterAvgStructures = 0;
+
+if (_clusterTerrainScans > 0) then {
+    _clusterAvgStructures = _clusterStructuresTotal / _clusterTerrainScans;
+};
 
 diag_log format [
     "[FLO][Objective] Generated %1 objectives from %2 world locations and %3 built-up candidates acceptedClusters=%4 scans=%5 totalMs=%6 clusterMs=%7 clusterAvgStructures=%8 clusterMaxStructures=%9 clusterAcceptedStructures=%10 cellsTotal=%11 cellsMin=%12 cellsMax=%13 skipped max=%14 overlap=%15 claimed=%16 marineWater=%17 clusterEnabled=%18 clusterBudget=%19 clusterRadius=%20 clusterMinBuildings=%21 clusterMaxObjectives=%22",
