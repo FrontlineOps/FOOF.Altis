@@ -2,7 +2,6 @@ params ["_unit", "_corpse"];
 
 if (!isServer) exitWith {};
 if (isNull _unit) exitWith {};
-if (isNull _corpse) exitWith {};
 if (!isPlayer _unit) exitWith {};
 
 private _side = side group _unit;

@@ -8,4 +8,5 @@ FLO_TicketConsumedTotal = createHashMap;
 FLO_TicketDeathStates = createHashMap;
 FLO_TicketPlayerSides = createHashMap;
 FLO_TicketAceMedicalDeathEh = -1;
+FLO_TicketClientRespawnEh = -1;
 FLO_TicketRevision = 0;

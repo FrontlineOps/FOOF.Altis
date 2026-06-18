@@ -6,6 +6,7 @@ class Spawn {
     class spawnClientNeedsAssignment {};
     class spawnClientReady {};
     class spawnConfirmAssignment {};
+    class spawnEquipFreshSideUniforms {};
     class spawnEnsureSideRespawn {};
     class spawnEnsureFreshUniform {};
     class spawnEnsureMap {};

@@ -1,3 +1,3 @@
 if (!isServer) exitWith { [] };
 
-profileNamespace getVariable [FLO_PersistenceKey, []]
+missionProfileNamespace getVariable [FLO_PersistenceKey, []]

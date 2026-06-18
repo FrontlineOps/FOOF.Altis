@@ -27,7 +27,7 @@ FOOF currently requires CBA_A3.
 - Initial player deployment waits for generated deployment zones to be ready on the server before teleporting clients.
 - Deployment assignment searches for a dry position inside the generated staging cell, so editor-placed playable units are only temporary mission placeholders.
 - Dedicated clients retry initial deployment until the server assignment or persisted player restore is actually applied, and the server also resyncs spawn assignment after player connect.
-- Fresh deployment and normal respawn always give the player a map if they do not already have one, plus a uniform from the side's selected Store faction when available; persisted player kits restore exactly as saved.
+- Fresh deployment and normal respawn always give the player a map if they do not already have one. Fresh players receive a uniform from the side's selected Store faction once that faction is locked; persisted player kits restore exactly as saved.
 - Generated BLUFOR/OPFOR staging cells are registered as temporary respawn positions until that side places its first FOB/COP.
 - Respawn uses Arma `MenuPosition` with server-registered staging, FOB, and active COP positions; staging remains as a fallback whenever a side has no active base respawn.
 - Slow spearhead-style pressure from captured cells.
@@ -56,12 +56,13 @@ FOOF currently requires CBA_A3.
 - Store attached to friendly FOB buildings for same-side faction equipment and vehicle purchases.
 - Store catalogs are generated from the selected faction's loaded config classes; no player-edited store definition files are required.
 - Store catalogs also append optional support gear without player-edited definitions: reviewed vanilla GPS and cTab/NSWDG device classes plus source-filtered ACRE/TFAR radio and ACE/KAT/ACM support items when those mods are loaded. Optional support mods follow a Forge-style model: detect the loaded `CfgPatches` entry, then include visible classes whose class/source tokens match that mod.
-- Vanilla Arma chat and voice channels are disabled addon-side for all clients. When ACRE is loaded, FOOF enables side-separated Babel languages and side-separated radio frequencies so BLUFOR and OPFOR start on isolated comms.
+- Vanilla Arma voice/comms channels are disabled addon-side while side text chat remains available. When ACRE is loaded, FOOF enables side-separated Babel languages and side-separated radio frequencies so BLUFOR and OPFOR start on isolated comms.
 - Store uses a cinematic tactical armory UI with item previews, equipment/cart summaries, personal saved kits, and clickable cart targets for putting ammo/items into uniform, vest, or backpack during checkout.
 - Store vehicle checkout creates a pending vehicle placement; the player places the purchased vehicle with the IDS camera inside the purchase FOB build radius.
 - Empty Store-purchased friendly vehicles and captured enemy vehicles can be recovered at friendly bases for partial money returns.
 - Server-owned BLUFOR/OPFOR ticket pools control respawn allowance; respawns spend one side ticket.
 - Commanders can buy reinforcement ticket packs from the Store with faction currency; ticket packs are commander-only.
+- Server persistence saves mission state to Arma's `missionProfileNamespace`.
 - Native notification and announcement framework replaces ad hoc hints for player-facing feedback.
 - Announcements render as compact top-center command banners, while normal notifications stack as smaller right-side tactical cards.
 - Objective pressure alerts are state-change driven and side-specific so players only get meaningful contact-line and assault-window reports.

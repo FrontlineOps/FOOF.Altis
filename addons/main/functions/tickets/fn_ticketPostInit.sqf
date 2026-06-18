@@ -27,3 +27,16 @@ if (hasInterface && {isClass (configFile >> "CfgPatches" >> "ace_medical")}) the
         }
     ] call CBA_fnc_addEventHandler;
 };
+
+if (hasInterface) then {
+    FLO_TicketClientRespawnEh = addMissionEventHandler [
+        "EntityRespawned",
+        {
+            params ["_newEntity", "_oldEntity"];
+
+            if (_newEntity isNotEqualTo player) exitWith {};
+
+            [_newEntity, _oldEntity] remoteExecCall ["FLO_fnc_ticketHandleRespawn", 2];
+        }
+    ];
+};

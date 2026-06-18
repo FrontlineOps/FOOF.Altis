@@ -92,6 +92,8 @@ _state set ["factionVoteReason", ""];
 _state set ["factionVoteEndsAt", 0];
 _state set ["factionVotePromptId", ""];
 
+[_side] call FLO_fnc_spawnEquipFreshSideUniforms;
+
 FLO_CommandRevision = FLO_CommandRevision + 1;
 ["factionResolved"] call FLO_fnc_persistenceScheduleSave;
 
