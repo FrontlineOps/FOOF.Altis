@@ -6,6 +6,7 @@ params [
 
 private _name = _objective get "name";
 private _owner = _objective get "owner";
+private _windowMinutes = ceil (FLO_ObjectivePressureVulnerableDuration / 60);
 private _defenderPayload = createHashMap;
 private _attackerPayload = createHashMap;
 
@@ -15,9 +16,9 @@ switch (_event) do {
             _defenderPayload = createHashMapFromArray [
                 ["mode", "notify"],
                 ["title", "AO"],
-                ["message", format ["%1 is on the contact line.", _name]],
+                ["message", format ["%1 is now a Frontline AO. Enemy pressure can make it Vulnerable.", _name]],
                 ["type", "info"],
-                ["duration", 6]
+                ["duration", 8]
             ];
             [_owner, _defenderPayload] call FLO_fnc_notificationSendSide;
 
@@ -25,9 +26,9 @@ switch (_event) do {
             _attackerPayload = createHashMapFromArray [
                 ["mode", "notify"],
                 ["title", "AO"],
-                ["message", format ["%1 is on the contact line.", _name]],
+                ["message", format ["%1 is now a Frontline AO. Build pressure there to make it Vulnerable.", _name]],
                 ["type", "info"],
-                ["duration", 6]
+                ["duration", 8]
             ];
             [_enemySide, _attackerPayload] call FLO_fnc_notificationSendSide;
         };
@@ -37,7 +38,7 @@ switch (_event) do {
             _defenderPayload = createHashMapFromArray [
                 ["mode", "announce"],
                 ["title", "Command"],
-                ["message", format ["Assault window open at %1. Reinforce immediately.", _name]],
+                ["message", format ["%1 is Vulnerable for %2 minutes. Enemy assault window is open; reinforce immediately.", _name, _windowMinutes]],
                 ["type", "warning"],
                 ["duration", 8]
             ];
@@ -46,7 +47,7 @@ switch (_event) do {
             _attackerPayload = createHashMapFromArray [
                 ["mode", "announce"],
                 ["title", "Command"],
-                ["message", format ["Assault window open at %1.", _name]],
+                ["message", format ["%1 is Vulnerable for %2 minutes. Assault window is open.", _name, _windowMinutes]],
                 ["type", "announcement"],
                 ["duration", 8]
             ];
@@ -58,7 +59,7 @@ switch (_event) do {
             _defenderPayload = createHashMapFromArray [
                 ["mode", "notify"],
                 ["title", "AO"],
-                ["message", format ["Assault window closed at %1.", _name]],
+                ["message", format ["%1 is no longer Vulnerable. Assault window closed.", _name]],
                 ["type", "success"],
                 ["duration", 6]
             ];
@@ -67,7 +68,7 @@ switch (_event) do {
             _attackerPayload = createHashMapFromArray [
                 ["mode", "notify"],
                 ["title", "Command"],
-                ["message", format ["Assault window closed at %1.", _name]],
+                ["message", format ["%1 is no longer Vulnerable. Assault window closed.", _name]],
                 ["type", "warning"],
                 ["duration", 6]
             ];

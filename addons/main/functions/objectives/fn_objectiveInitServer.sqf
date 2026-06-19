@@ -66,7 +66,7 @@ FLO_ObjectiveDeploymentTargetPairDistanceRatio = 0.65;
 FLO_ObjectiveDeploymentMaxOppositionDot = -0.25;
 FLO_ObjectiveDeploymentMaxObjectiveAccessDelta = 0.45;
 FLO_ObjectiveDeploymentMinSurfaceNormalZ = 0.82;
-FLO_ObjectiveDeploymentTopPairCount = 8;
+FLO_ObjectiveDeploymentTopPairCount = 24;
 
 {
     FLO_ObjectiveCells set [_x get "id", _x];

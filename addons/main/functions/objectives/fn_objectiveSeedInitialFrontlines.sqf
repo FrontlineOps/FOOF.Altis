@@ -44,6 +44,12 @@ private _selectedStage = "";
 private _candidates = [];
 private _candidateById = createHashMap;
 private _pairs = [];
+private _time = systemTimeUTC;
+private _selectionSalt = ((_time param [2, 0]) * 86400)
+    + ((_time param [3, 0]) * 3600)
+    + ((_time param [4, 0]) * 60)
+    + (_time param [5, 0])
+    + floor (diag_tickTime * 10);
 
 {
     private _stage = _x;
@@ -110,7 +116,11 @@ if ((count _pairs) isEqualTo 0) then {
 _pairs sort true;
 
 private _topCount = (count _pairs) min FLO_ObjectiveDeploymentTopPairCount;
-private _selectedPair = _pairs # (floor random _topCount);
+private _randomIndex = floor random _topCount;
+private _selectionOffset = _selectionSalt - ((floor (_selectionSalt / _topCount)) * _topCount);
+private _selectedIndexRaw = _randomIndex + _selectionOffset;
+private _selectedIndex = _selectedIndexRaw - ((floor (_selectedIndexRaw / _topCount)) * _topCount);
+private _selectedPair = _pairs # _selectedIndex;
 private _a = _candidateById get (_selectedPair # 2);
 private _b = _candidateById get (_selectedPair # 3);
 private _swapSides = (random 1) >= 0.5;
@@ -164,6 +174,9 @@ FLO_DeploymentPairDiagnostics = createHashMapFromArray [
     ["candidateCount", count _candidates],
     ["pairCount", count _pairs],
     ["topCount", _topCount],
+    ["randomIndex", _randomIndex],
+    ["selectionOffset", _selectionOffset],
+    ["selectedIndex", _selectedIndex],
     ["score", _selectedPair # 0],
     ["pairDistance", _selectedPair # 4],
     ["oppositionDot", _selectedPair # 5],
@@ -171,7 +184,7 @@ FLO_DeploymentPairDiagnostics = createHashMapFromArray [
 ];
 
 diag_log format [
-    "[FLO][Objective] Generated deployment zones stage=%1 west=%2 east=%3 westCount=%4 eastCount=%5 candidates=%6 pairs=%7 top=%8 score=%9 distance=%10",
+    "[FLO][Objective] Generated deployment zones stage=%1 west=%2 east=%3 westCount=%4 eastCount=%5 candidates=%6 pairs=%7 top=%8 random=%9 offset=%10 selected=%11 score=%12 distance=%13",
     _selectedStage,
     _westSeedId,
     _eastSeedId,
@@ -180,6 +193,9 @@ diag_log format [
     count _candidates,
     count _pairs,
     _topCount,
+    _randomIndex,
+    _selectionOffset,
+    _selectedIndex,
     _selectedPair # 0,
     _selectedPair # 4
 ];
