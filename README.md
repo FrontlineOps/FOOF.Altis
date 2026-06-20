@@ -12,6 +12,16 @@ The current foundation is a server-authoritative objective system with a generat
 
 FOOF currently requires CBA_A3.
 
+## License and Reuse
+
+FOOF is public for visibility, development tracking, and official release access, but it is not open source.
+
+Forward Offensive, also known as FOOF, is proprietary and all rights are reserved by Frontline Operations Development Group. No permission is granted to copy, modify, redistribute, reupload, repack, host, sell, sublicense, or create derivative versions of this project without prior written permission.
+
+Official public releases may be downloaded and used only for playing Forward Offensive through authorized releases, servers, or events.
+
+See `LICENSE.md` for the full license terms.
+
 ## Features
 
 - Server-authoritative objective state.
