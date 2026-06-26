@@ -9,9 +9,4 @@ if (!isNull _display) exitWith {
 
 private _objectiveId = [] call FLO_fnc_objectiveNearestAreaId;
 
-if (_objectiveId isEqualTo "") exitWith {
-    ["Move inside an AO to open its objective panel.", "warning", "AO"] call FLO_fnc_notify;
-    true
-};
-
 [_objectiveId] call FLO_fnc_objectiveOpenAreaDialog

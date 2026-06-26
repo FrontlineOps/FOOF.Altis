@@ -60,10 +60,6 @@ if ((_objective get "state") isNotEqualTo "held") exitWith {
     ["AO must be uncontested before it can be upgraded.", "warning"] call _notify;
 };
 
-if ((_player distance2D (_objective get "position")) > ((_objective get "displayRadius") + 15)) exitWith {
-    ["Move inside the AO to upgrade it.", "warning"] call _notify;
-};
-
 if !([_player, "build"] call FLO_fnc_commandPlayerHasAuthority) exitWith {
     ["Only commander-authorized players can upgrade AOs.", "warning"] call _notify;
 };
@@ -79,7 +75,8 @@ if (_pendingLevel > 0) exitWith {
     ["AO upgrade is already in progress.", "info"] call _notify;
 };
 
-private _cost = [_objective] call FLO_fnc_objectiveUpgradeCost;
+private _inPerson = (_player distance2D (_objective get "position")) <= ((_objective get "displayRadius") + FLO_ObjectiveInPersonUpgradeExtraRadius);
+private _cost = [_objective, _inPerson] call FLO_fnc_objectiveUpgradeCost;
 
 if !([_side, _cost, format ["AO upgrade %1 to level %2", _objectiveId, _level + 1]] call FLO_fnc_resourceSpend) exitWith {
     [format ["Not enough faction balance. Required: $%1.", _cost], "warning"] call _notify;
@@ -94,13 +91,14 @@ _objective set ["pendingUpgradeStartedAt", _startedAt];
 _objective set ["pendingUpgradeCompleteAt", _startedAt + _duration];
 
 diag_log format [
-    "[FLO][Objective] %1 started AO upgrade %2 to level %3 cost=%4 balance=%5 duration=%6",
+    "[FLO][Objective] %1 started AO upgrade %2 to level %3 cost=%4 balance=%5 duration=%6 mode=%7",
     _sideKey,
     _objectiveId,
     _newLevel,
     _cost,
     FLO_ResourceBalances get _sideKey,
-    _duration
+    _duration,
+    ["remote", "in-person"] select _inPerson
 ];
 
 [false, [], [_objectiveId]] call FLO_fnc_objectivePublishSnapshot;

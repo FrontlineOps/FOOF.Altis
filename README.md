@@ -29,6 +29,7 @@ See `LICENSE.md` for the full license terms.
 - Major AO system for towns, villages, ports, terminals, capitals, and strategic areas
 - Frontline-focused capture rules
 - AO pressure and assault windows
+- AO command panel for side-wide held AO upgrades
 - FOB and COP deployment systems
 - Commander voting and faction selection
 - Faction-based Store with weapons, gear, kits, support items, and FOB-only vehicle purchases
@@ -59,7 +60,7 @@ See `LICENSE.md` for the full license terms.
 - Deployment UI: `addons/main/ui/deploy/`
 - Intel UI: `addons/main/ui/intel/`
 - Store UI: `addons/main/ui/store/`
-- AO info UI: `addons/main/ui/objective/`
+- AO command UI: `addons/main/ui/objective/`
 - Startup: addon `postInit` during normal missions; Arma engine intro missions are skipped.
 - Dev test mission: `missions/FOOF_Test.Altis`
 
@@ -78,6 +79,16 @@ HEMTT project config is included for local addon checks and launch workflow.
 .\.tools\hemtt\hemtt.exe build --no-bin --no-rap
 .\.tools\hemtt\hemtt.exe launch
 ```
+
+## Objective and AO Upgrades
+
+The objective system is server-authoritative. Clients receive sanitized objective/grid snapshots for map markers and UI, but the server owns objective state, capture state, upgrade timers, resource spending, and persistence.
+
+`Ctrl+Shift+O` opens the AO command panel from anywhere. The panel lists all friendly held AOs for the player's side, shows level, income, pressure, vulnerability, pending upgrade time, faction balance, remote upgrade price, and in-person upgrade price. The same dialog includes a native Arma map preview: hovering an AO row focuses/highlights that AO, and clicking a friendly held AO on the map selects it in the panel.
+
+Commander/build-authorized players can request AO upgrades remotely from the panel at full price. If the requester is physically inside the selected AO, the server applies the in-person upgrade discount. The current remote formula is `nextLevel * resourceWeight * 1500`, rounded up to the nearest `$100`; the current in-person discount is `25%`.
+
+The server validates request owner, player life state, side, AO ownership, held/uncontested state, command authority, max level, pending upgrade state, physical proximity for discount eligibility, and faction balance before spending money or starting the upgrade timer.
 
 ### Resetting Persistence
 

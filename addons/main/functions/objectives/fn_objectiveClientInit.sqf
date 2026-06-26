@@ -7,6 +7,8 @@ FLO_ObjectiveClientObjectiveRecords = createHashMap;
 FLO_ObjectiveClientLastSnapshot = [];
 FLO_ObjectiveClientLastGridSnapshot = [];
 FLO_ObjectiveAreaActiveId = "";
+FLO_ObjectiveAreaNearbyId = "";
+FLO_ObjectiveAreaHoverId = "";
 FLO_ObjectiveAreaBrowserReady = false;
 
 [
@@ -18,7 +20,7 @@ FLO_ObjectiveAreaBrowserReady = false;
         [
             "FOOF",
             "openObjectiveAreaPanel",
-            ["Open AO Panel", "Open the AO objective panel for the area you are standing in."],
+            ["Open AO Panel", "Open the AO command panel."],
             { [] call FLO_fnc_objectiveToggleAreaDialog; true },
             {},
             [24, [true, true, false]],

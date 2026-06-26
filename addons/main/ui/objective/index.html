@@ -24,26 +24,29 @@
             inset: 0;
             padding: 18px;
             background:
-                linear-gradient(135deg, rgba(37, 215, 255, 0.12), transparent 46%),
-                linear-gradient(180deg, rgba(20, 34, 48, 0.92), rgba(3, 8, 14, 0.86));
+                linear-gradient(135deg, rgba(37, 215, 255, 0.13), transparent 42%),
+                linear-gradient(180deg, rgba(18, 30, 40, 0.96), rgba(3, 8, 14, 0.93));
             box-shadow:
                 inset 0 0 0 1px rgba(103, 232, 255, 0.28),
-                0 22px 48px rgba(0, 0, 0, 0.42);
-            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+                inset 0 0 44px rgba(37, 215, 255, 0.07),
+                0 24px 54px rgba(0, 0, 0, 0.46);
+            clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
         }
 
         .top {
-            display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            gap: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto 40px;
+            align-items: start;
+            gap: 14px;
             padding-bottom: 12px;
             border-bottom: 1px solid rgba(103, 232, 255, 0.22);
         }
 
-        .overline {
+        .overline,
+        .label {
             color: #25D7FF;
-            font-size: 13px;
+            font-size: 12px;
+            line-height: 1.1;
             font-weight: 900;
             letter-spacing: 0;
             text-transform: uppercase;
@@ -51,8 +54,122 @@
 
         h1 {
             margin: 3px 0 0;
-            font-size: 34px;
+            max-width: 270px;
+            font-size: 30px;
             line-height: 1;
+            font-weight: 900;
+            letter-spacing: 0;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .meta {
+            display: grid;
+            grid-template-columns: 86px 116px;
+            gap: 8px;
+        }
+
+        .meta-box,
+        .stat,
+        .list,
+        .status-strip {
+            background: rgba(8, 17, 25, 0.68);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.15);
+        }
+
+        .meta-box {
+            min-height: 40px;
+            padding: 7px 9px;
+        }
+
+        .meta-value {
+            margin-top: 2px;
+            color: #F2F7FA;
+            font-size: 17px;
+            line-height: 1;
+            font-weight: 900;
+        }
+
+        .close {
+            width: 40px;
+            height: 36px;
+            border: 0;
+            color: #A7B7C8;
+            background: rgba(12, 22, 32, 0.86);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.18);
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 12px;
+            height: calc(100% - 70px);
+            margin-top: 12px;
+            min-height: 0;
+        }
+
+        .list {
+            display: grid;
+            grid-template-rows: 34px 1fr;
+            min-height: 0;
+        }
+
+        .list-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 10px;
+            border-bottom: 1px solid rgba(103, 232, 255, 0.13);
+        }
+
+        .count {
+            color: #A7B7C8;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .rows {
+            min-height: 0;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            width: 100%;
+            min-height: 58px;
+            margin-bottom: 7px;
+            padding: 8px 9px;
+            border: 0;
+            color: #F2F7FA;
+            text-align: left;
+            background: rgba(12, 22, 32, 0.68);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.12);
+        }
+
+        .row.active {
+            background: rgba(31, 82, 98, 0.58);
+            box-shadow:
+                inset 0 0 0 1px rgba(103, 232, 255, 0.45),
+                0 0 16px rgba(37, 215, 255, 0.13);
+        }
+
+        .row.nearby {
+            box-shadow:
+                inset 0 0 0 1px rgba(167, 255, 90, 0.48),
+                0 0 14px rgba(167, 255, 90, 0.11);
+        }
+
+        .row-name {
+            min-width: 0;
+            font-size: 17px;
+            line-height: 1.02;
             font-weight: 900;
             text-transform: uppercase;
             white-space: nowrap;
@@ -60,44 +177,81 @@
             text-overflow: ellipsis;
         }
 
-        .close {
-            width: 36px;
-            height: 32px;
-            border: 0;
+        .row-sub,
+        .row-cost {
+            margin-top: 4px;
             color: #A7B7C8;
-            background: rgba(12, 22, 32, 0.8);
-            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.18);
-            font-size: 20px;
-            font-weight: 900;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 14px;
-        }
-
-        .stat {
-            min-height: 58px;
-            padding: 10px 12px;
-            background: rgba(12, 22, 32, 0.62);
-            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.13);
-        }
-
-        .label {
-            color: #66788A;
             font-size: 12px;
+            line-height: 1.1;
             font-weight: 900;
             text-transform: uppercase;
         }
 
-        .value {
-            margin-top: 3px;
+        .row-level {
+            min-width: 42px;
+            color: #A7FF5A;
+            font-size: 22px;
+            line-height: 1;
+            font-weight: 900;
+            text-align: right;
+        }
+
+        .detail {
+            display: grid;
+            grid-template-rows: auto auto 1fr auto;
+            gap: 10px;
+            min-height: 0;
+        }
+
+        .status-strip {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+            min-height: 52px;
+            padding: 10px 12px;
+            align-items: center;
+        }
+
+        .status-title {
             color: #F2F7FA;
-            font-size: 19px;
+            font-size: 22px;
+            line-height: 1;
+            font-weight: 900;
+            text-transform: uppercase;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .status-mode {
+            color: #A7B7C8;
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .stat {
+            min-height: 66px;
+            padding: 10px 11px;
+        }
+
+        .stat.wide {
+            grid-column: span 2;
+        }
+
+        .value {
+            margin-top: 4px;
+            color: #F2F7FA;
+            font-size: 20px;
             line-height: 1.08;
             font-weight: 900;
+            overflow-wrap: anywhere;
         }
 
         .amber {
@@ -108,33 +262,31 @@
             color: #A7FF5A;
         }
 
-        .wide {
-            grid-column: 1 / -1;
+        .hint {
+            min-height: 46px;
+            padding: 10px 12px;
+            color: #A7B7C8;
+            background: rgba(3, 8, 14, 0.52);
+            box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.1);
+            font-size: 14px;
+            line-height: 1.18;
+            font-weight: 800;
         }
 
         .actions {
             display: grid;
-            grid-template-columns: 1fr 120px;
+            grid-template-columns: 1fr 150px;
             gap: 10px;
-            margin-top: 14px;
             align-items: stretch;
         }
 
-        .hint {
-            min-height: 44px;
-            padding: 8px 10px;
-            color: #A7B7C8;
-            background: rgba(3, 8, 14, 0.42);
-            font-size: 13px;
-            line-height: 1.18;
-        }
-
         .upgrade {
+            min-height: 46px;
             border: 0;
             color: #031018;
-            background: linear-gradient(90deg, #25D7FF, #67E8FF);
-            box-shadow: 0 0 18px rgba(37, 215, 255, 0.28);
-            font-size: 15px;
+            background: linear-gradient(90deg, #A7FF5A, #67E8FF);
+            box-shadow: 0 0 20px rgba(37, 215, 255, 0.22);
+            font-size: 16px;
             font-weight: 900;
             text-transform: uppercase;
             clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
@@ -142,8 +294,18 @@
 
         .upgrade:disabled {
             color: #66788A;
-            background: rgba(12, 22, 32, 0.68);
+            background: rgba(12, 22, 32, 0.72);
             box-shadow: inset 0 0 0 1px rgba(103, 232, 255, 0.14);
+        }
+
+        .empty {
+            padding: 18px 12px;
+            color: #A7B7C8;
+            background: rgba(3, 8, 14, 0.42);
+            font-size: 14px;
+            line-height: 1.2;
+            font-weight: 900;
+            text-transform: uppercase;
         }
     </style>
 </head>
@@ -151,53 +313,86 @@
     <section class="panel">
         <div class="top">
             <div>
-                <div class="overline">Area of Operations</div>
-                <h1 id="name">AO</h1>
+                <div class="overline">Area Command Panel</div>
+                <h1 id="name">Held AOs</h1>
+            </div>
+            <div class="meta">
+                <div class="meta-box">
+                    <div class="label">Side</div>
+                    <div class="meta-value" id="side">NONE</div>
+                </div>
+                <div class="meta-box">
+                    <div class="label">Balance</div>
+                    <div class="meta-value amber" id="balance">$0</div>
+                </div>
             </div>
             <button class="close" id="close" type="button">X</button>
         </div>
 
-        <div class="grid">
-            <div class="stat">
-                <div class="label">Owner</div>
-                <div class="value" id="owner">Neutral</div>
-            </div>
-            <div class="stat">
-                <div class="label">Level</div>
-                <div class="value green" id="level">0 Occupied</div>
-            </div>
-            <div class="stat">
-                <div class="label">Income</div>
-                <div class="value amber" id="income">$0 / 15 min</div>
-            </div>
-            <div class="stat">
-                <div class="label">Upgrade Cost</div>
-                <div class="value amber" id="cost">$0</div>
-            </div>
-            <div class="stat wide">
-                <div class="label">Upgrade Status</div>
-                <div class="value" id="status">Ready</div>
-            </div>
-            <div class="stat">
-                <div class="label">Pressure</div>
-                <div class="value amber" id="pressure">Rear</div>
-            </div>
-            <div class="stat">
-                <div class="label">Vulnerability</div>
-                <div class="value" id="vulnerable">Stable</div>
-            </div>
-        </div>
+        <div class="layout">
+            <aside class="list">
+                <div class="list-head">
+                    <div class="label">Friendly Held AOs</div>
+                    <div class="count" id="count">0</div>
+                </div>
+                <div class="rows" id="areas"></div>
+            </aside>
 
-        <div class="actions">
-            <div class="hint" id="hint">Move inside a friendly AO to upgrade it.</div>
-            <button class="upgrade" id="upgrade" type="button">Upgrade</button>
+            <main class="detail">
+                <div class="status-strip">
+                    <div>
+                        <div class="status-title" id="selected">No AO Selected</div>
+                        <div class="status-mode" id="mode">Remote orders available from anywhere</div>
+                    </div>
+                    <div class="value green" id="level">0</div>
+                </div>
+
+                <div class="grid">
+                    <div class="stat">
+                        <div class="label">Income</div>
+                        <div class="value amber" id="income">$0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">Remote Cost</div>
+                        <div class="value amber" id="remoteCost">$0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">In-Person Cost</div>
+                        <div class="value green" id="localCost">$0</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">Selected Cost</div>
+                        <div class="value amber" id="cost">$0</div>
+                    </div>
+                    <div class="stat wide">
+                        <div class="label">Upgrade Status</div>
+                        <div class="value" id="status">Ready</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">Pressure</div>
+                        <div class="value amber" id="pressure">Rear</div>
+                    </div>
+                    <div class="stat">
+                        <div class="label">Vulnerability</div>
+                        <div class="value" id="vulnerable">Stable</div>
+                    </div>
+                </div>
+
+                <div></div>
+
+                <div class="actions">
+                    <div class="hint" id="hint">Select a friendly held AO.</div>
+                    <button class="upgrade" id="upgrade" type="button">Upgrade</button>
+                </div>
+            </main>
         </div>
     </section>
 
     <script>
         (function () {
-            var currentPayload = {};
-            var pendingUntil = 0;
+            var currentPayload = { objectives: [] };
+            var selectedId = "";
+            var receivedAt = Date.now();
 
             function send(event, data) {
                 var payload = JSON.stringify({ event: event, data: data || {} });
@@ -242,38 +437,207 @@
                 return String(minutes) + "m";
             }
 
+            function areas() {
+                return currentPayload.objectives || [];
+            }
+
+            function hasArea(id) {
+                var list = areas();
+                var i;
+
+                for (i = 0; i < list.length; i += 1) {
+                    if (list[i].id === id) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
+            function selectedArea() {
+                var list = areas();
+                var i;
+
+                for (i = 0; i < list.length; i += 1) {
+                    if (list[i].id === selectedId) {
+                        return list[i];
+                    }
+                }
+
+                return list.length > 0 ? list[0] : null;
+            }
+
+            function remainingSeconds(area) {
+                var base = Math.max(0, Number(area.pendingUpgradeRemaining) || 0);
+                var elapsed = Math.max(0, Math.floor((Date.now() - receivedAt) / 1000));
+
+                return Math.max(0, base - elapsed);
+            }
+
+            function setEmpty() {
+                text("name", "Held AOs");
+                text("selected", "No Friendly Held AO");
+                text("mode", "Capture and hold AOs before ordering upgrades");
+                text("level", "0");
+                text("income", "$0 / 15 min");
+                text("remoteCost", "-");
+                text("localCost", "-");
+                text("cost", "-");
+                text("status", "Unavailable");
+                text("pressure", "No held AO");
+                text("vulnerable", "Stable");
+                text("hint", "No friendly held AO is available for upgrade.");
+                node("upgrade").disabled = true;
+            }
+
             function updateStatus() {
-                if (currentPayload.pendingUpgradeLevel > 0) {
-                    var remaining = Math.max(0, Math.ceil((pendingUntil - Date.now()) / 1000));
-                    text("status", (currentPayload.upgradeStatus || "Upgrade in progress") + " - " + duration(remaining));
+                var area = selectedArea();
+                var remaining;
+
+                if (!area) {
+                    setEmpty();
+                    return;
+                }
+
+                if (area.pendingUpgradeLevel > 0) {
+                    remaining = remainingSeconds(area);
+                    text("status", (area.upgradeStatus || "Upgrade in progress") + " - " + duration(remaining));
                     return;
                 }
 
                 text("status", "Ready");
             }
 
+            function renderList() {
+                var rows = node("areas");
+                var list = areas();
+                var i;
+
+                rows.innerHTML = "";
+                text("count", String(list.length));
+
+                if (list.length === 0) {
+                    rows.appendChild(document.createElement("div")).className = "empty";
+                    rows.firstChild.textContent = "No friendly held AOs";
+                    return;
+                }
+
+                for (i = 0; i < list.length; i += 1) {
+                    (function (area) {
+                        var row = document.createElement("button");
+                        var info = document.createElement("div");
+                        var name = document.createElement("div");
+                        var sub = document.createElement("div");
+                        var cost = document.createElement("div");
+                        var level = document.createElement("div");
+
+                        row.type = "button";
+                        row.className = "row" +
+                            (area.id === selectedId ? " active" : "") +
+                            (area.nearby ? " nearby" : "");
+
+                        name.className = "row-name";
+                        name.textContent = area.name || "AO";
+
+                        sub.className = "row-sub";
+                        sub.textContent = (area.pressureState || "Rear") + " / " + (area.levelName || "Level");
+
+                        cost.className = "row-cost";
+                        cost.textContent = (area.nearby ? "Local " : "Remote ") + money(area.upgradeCost);
+
+                        level.className = "row-level";
+                        level.textContent = "L" + String(area.level || 0);
+
+                        info.appendChild(name);
+                        info.appendChild(sub);
+                        info.appendChild(cost);
+                        row.appendChild(info);
+                        row.appendChild(level);
+                        row.onclick = function () {
+                            selectedId = area.id;
+                            send("objective::select", { id: selectedId });
+                            render();
+                        };
+                        row.onmouseenter = function () {
+                            send("objective::hover", { id: area.id });
+                        };
+                        row.onmouseleave = function () {
+                            send("objective::hover", { id: "" });
+                        };
+
+                        rows.appendChild(row);
+                    }(list[i]));
+                }
+            }
+
+            function renderDetail() {
+                var area = selectedArea();
+                var mode;
+                var hint;
+                var discount;
+
+                if (!area) {
+                    setEmpty();
+                    return;
+                }
+
+                selectedId = area.id;
+                discount = Math.max(0, Number(currentPayload.discountPercent) || 0);
+                mode = area.nearby ? "In-person order: discounted local upgrade" : "Remote order: full-price upgrade";
+
+                text("name", area.name || "AO");
+                text("selected", area.name || "AO");
+                text("mode", mode);
+                text("level", "L" + String(area.level || 0));
+                text("income", money(area.incomePer15) + " / 15 min");
+                text("remoteCost", area.level >= area.maxLevel ? "Max" : money(area.remoteUpgradeCost));
+                text("localCost", area.level >= area.maxLevel ? "Max" : money(area.inPersonUpgradeCost));
+                text("cost", area.level >= area.maxLevel ? "Max" : money(area.upgradeCost));
+                text("pressure", (area.pressureState || "Rear") + " - " + String(area.attackerPressure || 0) + " / " + String(area.pressureThreshold || 100));
+                text("vulnerable", area.vulnerableRemaining > 0 ? ((area.vulnerableSide || "Enemy") + " " + duration(area.vulnerableRemaining)) : "Stable");
+
+                updateStatus();
+
+                if (area.canUpgrade) {
+                    hint = area.nearby ?
+                        ("Local upgrade discount active: " + String(discount) + "% off. Faction balance: " + money(currentPayload.balance)) :
+                        ("Remote upgrade uses full price. Move to this AO for " + String(discount) + "% off. Faction balance: " + money(currentPayload.balance));
+                } else {
+                    hint = area.upgradeReason || "Upgrade unavailable.";
+                }
+
+                text("hint", hint);
+                node("upgrade").disabled = !area.canUpgrade;
+            }
+
+            function render() {
+                text("side", currentPayload.playerSide || "NONE");
+                text("balance", money(currentPayload.balance));
+                renderList();
+                renderDetail();
+            }
+
             window.FOOFObjective = {
                 receive: function (payload) {
+                    var list;
+
                     payload = payload || {};
                     currentPayload = payload;
-                    pendingUntil = Date.now() + (Math.max(0, Number(payload.pendingUpgradeRemaining) || 0) * 1000);
+                    receivedAt = Date.now();
+                    list = areas();
 
-                    text("name", payload.name || "AO");
-                    text("owner", payload.owner || "Neutral");
-                    text("level", String(payload.level || 0) + " " + (payload.levelName || ""));
-                    text("income", money(payload.incomePer15) + " / 15 min");
-                    text("cost", payload.level >= payload.maxLevel ? "Max" : money(payload.upgradeCost));
-                    text("pressure", (payload.pressureState || "Rear") + " - " + String(payload.attackerPressure || 0) + " / " + String(payload.pressureThreshold || 100));
-                    text("vulnerable", payload.vulnerableRemaining > 0 ? ((payload.vulnerableSide || "Enemy") + " " + duration(payload.vulnerableRemaining)) : "Stable");
-                    updateStatus();
-                    text("hint", payload.canUpgrade ? ("Faction balance: " + money(payload.balance)) : (payload.upgradeReason || "Upgrade unavailable."));
+                    if (!selectedId || !hasArea(selectedId)) {
+                        selectedId = payload.activeId || (list.length > 0 ? list[0].id : "");
+                    }
 
-                    node("upgrade").disabled = !payload.canUpgrade;
+                    render();
                 }
             };
 
             node("upgrade").onclick = function () {
-                send("objective::upgrade", {});
+                if (selectedId) {
+                    send("objective::upgrade", { id: selectedId });
+                }
             };
 
             node("close").onclick = function () {

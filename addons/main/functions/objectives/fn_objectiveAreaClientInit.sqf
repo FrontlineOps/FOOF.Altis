@@ -1,9 +1,12 @@
 if (!hasInterface) exitWith {};
 
+FLO_ObjectiveAreaNearbyId = "";
+
 FLO_ObjectiveAreaClientHandle = [
     {
         if ((isNull player) || {!alive player}) exitWith {
             FLO_ObjectiveAreaActiveId = "";
+            FLO_ObjectiveAreaNearbyId = "";
 
             private _display = findDisplay FLO_ObjectiveAreaDialogIdd;
             if (!isNull _display) then {
@@ -15,6 +18,7 @@ FLO_ObjectiveAreaClientHandle = [
 
         if !(_playerSide in [west, east]) exitWith {
             FLO_ObjectiveAreaActiveId = "";
+            FLO_ObjectiveAreaNearbyId = "";
 
             private _display = findDisplay FLO_ObjectiveAreaDialogIdd;
             if (!isNull _display) then {
@@ -23,19 +27,9 @@ FLO_ObjectiveAreaClientHandle = [
         };
 
         private _nearestId = [] call FLO_fnc_objectiveNearestAreaId;
+        FLO_ObjectiveAreaNearbyId = _nearestId;
 
-        if (_nearestId isEqualTo "") exitWith {
-            if (FLO_ObjectiveAreaActiveId isNotEqualTo "") then {
-                FLO_ObjectiveAreaActiveId = "";
-
-                private _display = findDisplay FLO_ObjectiveAreaDialogIdd;
-                if (!isNull _display) then {
-                    _display closeDisplay 0;
-                };
-            };
-        };
-
-        if (_nearestId isNotEqualTo FLO_ObjectiveAreaActiveId) then {
+        if ((FLO_ObjectiveAreaActiveId isEqualTo "") && {_nearestId isNotEqualTo ""}) then {
             FLO_ObjectiveAreaActiveId = _nearestId;
         };
 

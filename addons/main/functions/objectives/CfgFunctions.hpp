@@ -15,6 +15,7 @@ class Objective {
     class objectiveClientInit {};
     class objectiveCollectPresence {};
     class objectiveDeploymentEntryCells {};
+    class objectiveDrawAreaMap {};
     class objectiveEvaluate {};
     class objectiveEvaluateCell {};
     class objectiveEvaluateGridInfluence {};
@@ -55,12 +56,14 @@ class Objective {
     class objectiveResolveOwnerLevelTransition {};
     class objectiveSanitizeId {};
     class objectiveScoreDeploymentPair {};
+    class objectiveSelectAreaFromMap {};
     class objectiveSeedInitialFrontlines {};
     class objectiveSendFullSnapshot {};
     class objectiveSideKey {};
     class objectiveStartLoop {};
     class objectiveToggleAreaDialog {};
     class objectiveUpdateAreaDialog {};
+    class objectiveUpdateAreaMap {};
     class objectiveUpdatePresenceCounts {};
     class objectiveUpdateGridMapMarkers {};
     class objectiveUpdateMapMarkers {};
