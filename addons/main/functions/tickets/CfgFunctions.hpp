@@ -4,9 +4,13 @@ class Tickets {
     class ticketAdd {};
     class ticketApplyRespawnLock {};
     class ticketBroadcastRespawnLock {};
+    class ticketClientInit {};
+    class ticketConfigureManualRespawn {};
+    class ticketConfirmManualRespawn {};
     class ticketConsume {};
     class ticketHandleAceMedicalDeath {};
     class ticketHandleDeath {};
+    class ticketHandleDisconnect {};
     class ticketHandleRespawn {};
     class ticketInitServer {};
     class ticketPostInit { postInit = 1; };

@@ -18,6 +18,7 @@ FLO_TicketConsumedTotal = createHashMapFromArray [
 FLO_TicketDeathStates = createHashMap;
 FLO_TicketHandledRespawns = createHashMap;
 FLO_TicketPlayerSides = createHashMap;
+FLO_TicketDisconnectedPlayers = createHashMap;
 FLO_TicketRevision = 0;
 
 {
@@ -43,6 +44,22 @@ FLO_TicketPlayerConnectedEh = [
     }
 ] call CBA_fnc_addEventHandler;
 
+FLO_TicketHandleDisconnectEh = [
+    "FLO_eventHandleDisconnect",
+    {
+        params ["_unit", "_id", "_uid", "_name"];
+        [_unit, _id, _uid, _name] call FLO_fnc_ticketHandleDisconnect;
+    }
+] call CBA_fnc_addEventHandler;
+
+FLO_TicketPlayerDisconnectedEh = [
+    "FLO_eventPlayerDisconnected",
+    {
+        params ["_id", "_uid", "_name"];
+        [objNull, _id, _uid, _name] call FLO_fnc_ticketHandleDisconnect;
+    }
+] call CBA_fnc_addEventHandler;
+
 FLO_TicketEntityKilledEh = [
     "FLO_eventEntityKilled",
     {
@@ -55,7 +72,7 @@ FLO_TicketEntityRespawnedEh = [
     "FLO_eventEntityRespawned",
     {
         params ["_newEntity", "_oldEntity"];
-        [_newEntity] call FLO_fnc_ticketTrackPlayer;
+        [_newEntity, false] call FLO_fnc_ticketTrackPlayer;
         [_newEntity, _oldEntity] call FLO_fnc_ticketHandleRespawn;
     }
 ] call CBA_fnc_addEventHandler;

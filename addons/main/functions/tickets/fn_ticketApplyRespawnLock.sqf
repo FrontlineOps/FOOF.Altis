@@ -6,6 +6,9 @@ if (isMultiplayer && {remoteExecutedOwner isNotEqualTo 2} && {remoteExecutedOwne
     diag_log format ["[FLO][Tickets] Rejected respawn lock from owner %1", remoteExecutedOwner];
 };
 
+FLO_TicketRespawnLocked = _locked;
+FLO_TicketRespawnLockMessage = _message;
+
 setPlayerRespawnTime ([_respawnDelay, _lockDelay] select _locked);
 
 if (_message isNotEqualTo "") then {

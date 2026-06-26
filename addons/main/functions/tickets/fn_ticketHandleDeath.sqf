@@ -19,6 +19,18 @@ if (_uid isEqualTo "") exitWith {
     };
 };
 
+if ((_unit getVariable ["FLO_TicketDisconnecting", false]) || {_uid in FLO_TicketDisconnectedPlayers}) exitWith {
+    _unit setVariable ["FLO_TicketDeathHandled", true];
+
+    diag_log format [
+        "[FLO][Tickets] Death ignored: disconnected uid=%1 unit=%2 killer=%3 instigator=%4",
+        _uid,
+        _unit,
+        _killer,
+        _instigator
+    ];
+};
+
 private _sideKey = _unit getVariable ["FLO_TicketSideKey", ""];
 private _side = sideUnknown;
 private _currentSide = side group _unit;

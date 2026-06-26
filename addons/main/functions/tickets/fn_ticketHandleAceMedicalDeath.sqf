@@ -15,6 +15,16 @@ if ((_unitUid isNotEqualTo "") && {_unitUid isNotEqualTo _uid}) exitWith {
     ];
 };
 
+if ((_unit getVariable ["FLO_TicketDisconnecting", false]) || {_uid in FLO_TicketDisconnectedPlayers}) exitWith {
+    _unit setVariable ["FLO_TicketDeathHandled", true];
+
+    diag_log format [
+        "[FLO][Tickets] ACE medical death ignored: disconnected uid=%1 unit=%2",
+        _uid,
+        _unit
+    ];
+};
+
 if (_sideKey in ["WEST", "EAST"]) then {
     _unit setVariable ["FLO_TicketPlayerUid", _uid, true];
     _unit setVariable ["FLO_TicketSideKey", _sideKey, true];

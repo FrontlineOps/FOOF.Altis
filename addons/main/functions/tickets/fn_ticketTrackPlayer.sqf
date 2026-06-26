@@ -1,4 +1,4 @@
-params ["_unit"];
+params ["_unit", ["_clearDisconnect", true]];
 
 if (!isServer) exitWith {};
 if (isNull _unit) exitWith {};
@@ -6,6 +6,17 @@ if (isNull _unit) exitWith {};
 private _uid = getPlayerUID _unit;
 
 if (_uid isEqualTo "") exitWith {};
+
+if (_clearDisconnect) then {
+    FLO_TicketDisconnectedPlayers deleteAt _uid;
+};
+_unit setVariable ["FLO_TicketDisconnecting", false];
+
+if !(_uid in FLO_TicketDeathStates) then {
+    _unit setVariable ["FLO_TicketDeathHandled", false];
+    _unit setVariable ["FLO_TicketDeathState", ""];
+    _unit setVariable ["FLO_TicketDeathSideKey", ""];
+};
 
 private _side = side group _unit;
 

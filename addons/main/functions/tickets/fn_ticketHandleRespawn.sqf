@@ -12,6 +12,33 @@ private _uid = getPlayerUID _unit;
 
 if (_uid isEqualTo "") exitWith {};
 
+private _sideKey = [_side] call FLO_fnc_resourceSideKey;
+private _hasDeathState = _uid in FLO_TicketDeathStates;
+private _disconnectRespawn = _uid in FLO_TicketDisconnectedPlayers;
+
+if ((!isNull _corpse) && {_corpse getVariable ["FLO_TicketDisconnecting", false]}) then {
+    _disconnectRespawn = true;
+};
+
+if (_disconnectRespawn && {!_hasDeathState}) exitWith {
+    FLO_TicketDisconnectedPlayers deleteAt _uid;
+    _unit setVariable ["FLO_TicketDisconnecting", false];
+    _unit setVariable ["FLO_TicketDeathHandled", false];
+    _unit setVariable ["FLO_TicketDeathState", ""];
+    _unit setVariable ["FLO_TicketDeathSideKey", ""];
+    [_unit, ([_side] call FLO_fnc_ticketSideBalance) <= 0, ""] call FLO_fnc_ticketSyncPlayer;
+
+    diag_log format [
+        "[FLO][Tickets] Respawn ignored: disconnected uid=%1 side=%2 corpse=%3",
+        _uid,
+        _sideKey,
+        _corpse
+    ];
+};
+
+FLO_TicketDisconnectedPlayers deleteAt _uid;
+_unit setVariable ["FLO_TicketDisconnecting", false];
+
 _unit setVariable ["FLO_TicketDeathHandled", false];
 _unit setVariable ["FLO_TicketDeathState", ""];
 _unit setVariable ["FLO_TicketDeathSideKey", ""];
@@ -25,7 +52,6 @@ if (_respawnId isEqualTo "") then {
 if (_respawnId in FLO_TicketHandledRespawns) exitWith {};
 FLO_TicketHandledRespawns set [_respawnId, true];
 
-private _sideKey = [_side] call FLO_fnc_resourceSideKey;
 private _uniformClass = [_sideKey] call FLO_fnc_spawnSideStoreUniform;
 
 [_unit, _uniformClass] remoteExecCall ["FLO_fnc_spawnEnsureFreshUniform", owner _unit];
