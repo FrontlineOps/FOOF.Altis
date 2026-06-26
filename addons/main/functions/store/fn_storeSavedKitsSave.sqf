@@ -84,6 +84,15 @@ for "_i" from 0 to ((count _items) - 1) do {
         _container = "auto";
     };
 
+    private _slot = "";
+    if ("slot" in _entry) then {
+        _slot = _entry get "slot";
+    };
+
+    if (((typeName _slot) isNotEqualTo "STRING") || {!(_slot in ["", "primary", "handgun", "secondary", "assigned", "uniform", "vest", "backpack", "headgear", "facewear", "binocular"])}) then {
+        _slot = "";
+    };
+
     _sanitized pushBack createHashMapFromArray [
         ["className", _className],
         ["entryKind", _entryKind],
@@ -91,7 +100,8 @@ for "_i" from 0 to ((count _items) - 1) do {
         ["name", _displayName],
         ["priceValue", _priceValue],
         ["quantity", _quantity],
-        ["container", _container]
+        ["container", _container],
+        ["slot", _slot]
     ];
 };
 

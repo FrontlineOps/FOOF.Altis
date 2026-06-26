@@ -9,6 +9,7 @@ private _validClass = switch (_category) do {
     case "mines": { isClass (configFile >> "CfgMagazines" >> _className) };
     case "misc": { (isClass (configFile >> "CfgWeapons" >> _className)) || {isClass (configFile >> "CfgMagazines" >> _className)} };
     case "backpacks": { isClass (configFile >> "CfgVehicles" >> _className) };
+    case "facewear": { isClass (configFile >> "CfgGlasses" >> _className) };
     case "cars": { isClass (configFile >> "CfgVehicles" >> _className) };
     case "armor": { isClass (configFile >> "CfgVehicles" >> _className) };
     case "helis": { isClass (configFile >> "CfgVehicles" >> _className) };

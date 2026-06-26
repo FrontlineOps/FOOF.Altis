@@ -22,6 +22,7 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
 
         private _quantity = 1;
         private _container = "auto";
+        private _slot = "";
 
         if ("quantity" in _x) then {
             _quantity = floor (_x get "quantity");
@@ -29,6 +30,10 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
 
         if ("container" in _x) then {
             _container = _x get "container";
+        };
+
+        if ("slot" in _x) then {
+            _slot = _x get "slot";
         };
 
         if !(_container in FLO_StoreGearContainers) then {
@@ -87,13 +92,45 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
             };
             default {
                 private _itemType = _className call BIS_fnc_itemType;
+                private _group = _itemType select 0;
                 private _kind = _itemType select 1;
 
-                if (_kind in ["GPS", "Map", "Compass", "Watch", "Radio", "NVGoggles", "Terminal"]) then {
-                    player linkItem _className;
+                if (_category isEqualTo "attachments") then {
+                    switch (_slot) do {
+                        case "primary": {
+                            player addPrimaryWeaponItem _className;
+                        };
+                        case "handgun": {
+                            player addHandgunItem _className;
+                        };
+                        case "secondary": {
+                            player addSecondaryWeaponItem _className;
+                        };
+                        default {
+                            for "_i" from 1 to _quantity do {
+                                [player, _className, _container] call FLO_fnc_storeAddInventoryItem;
+                            };
+                        };
+                    };
                 } else {
-                    for "_i" from 1 to _quantity do {
-                        [player, _className, _container] call FLO_fnc_storeAddInventoryItem;
+                    if (_slot isEqualTo "binocular") then {
+                        if ((binocular player) isNotEqualTo "") then {
+                            player removeWeapon (binocular player);
+                        };
+
+                        player addWeapon _className;
+                    } else {
+                        if ((_slot isEqualTo "assigned") || {_kind in ["GPS", "Map", "Compass", "Watch", "Radio", "NVGoggles", "Terminal"]}) then {
+                            player linkItem _className;
+                        } else {
+                            if ((_group isEqualTo "Weapon") && {_kind in ["Binocular", "LaserDesignator"]}) then {
+                                player addWeapon _className;
+                            } else {
+                                for "_i" from 1 to _quantity do {
+                                    [player, _className, _container] call FLO_fnc_storeAddInventoryItem;
+                                };
+                            };
+                        };
                     };
                 };
             };

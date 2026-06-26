@@ -76,6 +76,7 @@ for "_i" from 0 to ((count _cart) - 1) do {
                 private _entryKind = _entry get "entryKind";
                 private _quantity = 1;
                 private _container = "auto";
+                private _slot = "";
 
                 if ("quantity" in _entry) then {
                     _quantity = _entry get "quantity";
@@ -85,7 +86,11 @@ for "_i" from 0 to ((count _cart) - 1) do {
                     _container = _entry get "container";
                 };
 
-                if (((typeName _className) isNotEqualTo "STRING") || {((typeName _entryKind) isNotEqualTo "STRING") || {((typeName _quantity) isNotEqualTo "SCALAR") || {((typeName _container) isNotEqualTo "STRING")}}}) then {
+                if ("slot" in _entry) then {
+                    _slot = _entry get "slot";
+                };
+
+                if (((typeName _className) isNotEqualTo "STRING") || {((typeName _entryKind) isNotEqualTo "STRING") || {((typeName _quantity) isNotEqualTo "SCALAR") || {((typeName _container) isNotEqualTo "STRING") || {((typeName _slot) isNotEqualTo "STRING")}}}}) then {
                     _ok = false;
                     _message = "Cart line has invalid item data.";
                 } else {
@@ -107,6 +112,10 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                     _ok = false;
                                     _message = "Cart line has invalid container target.";
                                 } else {
+                                    if !(_slot in ["", "primary", "handgun", "secondary", "assigned", "uniform", "vest", "backpack", "headgear", "facewear", "binocular"]) then {
+                                        _ok = false;
+                                        _message = "Cart line has invalid gear slot.";
+                                    } else {
                                     private _key = format ["%1:%2", _entryKind, toLower _className];
 
                                     if !(_key in _itemIndex) then {
@@ -165,10 +174,12 @@ for "_i" from 0 to ((count _cart) - 1) do {
                                                     ["name", _item get "name"],
                                                     ["category", _item get "category"],
                                                     ["container", _container],
-                                                    ["quantity", _quantity]
+                                                    ["quantity", _quantity],
+                                                    ["slot", _slot]
                                                 ];
                                             };
                                         };
+                                    };
                                     };
                                 };
                             };

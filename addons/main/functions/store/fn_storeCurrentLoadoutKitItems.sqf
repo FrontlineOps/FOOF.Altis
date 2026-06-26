@@ -8,6 +8,8 @@ private _fnc_categoryForClass = {
 
     if (_className isEqualTo "") exitWith { "" };
 
+    if (isClass (configFile >> "CfgGlasses" >> _className)) exitWith { "facewear" };
+
     if (isClass (configFile >> "CfgMagazines" >> _className)) exitWith {
         private _cfg = configFile >> "CfgMagazines" >> _className;
 
@@ -47,6 +49,9 @@ private _fnc_displayName = {
         case "backpacks": {
             configFile >> "CfgVehicles" >> _className
         };
+        case "facewear": {
+            configFile >> "CfgGlasses" >> _className
+        };
         default {
             configFile >> "CfgWeapons" >> _className
         };
@@ -62,7 +67,7 @@ private _fnc_displayName = {
 };
 
 private _fnc_addLine = {
-    params ["_className", ["_container", "auto"], ["_quantity", 1]];
+    params ["_className", ["_container", "auto"], ["_quantity", 1], ["_slot", ""]];
 
     if (((typeName _className) isNotEqualTo "STRING") || {_className isEqualTo ""}) exitWith {};
 
@@ -78,11 +83,15 @@ private _fnc_addLine = {
 
     if (_quantity < 1) exitWith {};
 
+    if ((typeName _slot) isNotEqualTo "STRING") then {
+        _slot = "";
+    };
+
     private _category = [_className] call _fnc_categoryForClass;
 
     if ((_category isEqualTo "") || {!(_category in FLO_StoreGearCategories)}) exitWith {};
 
-    private _key = format ["%1:%2:%3", _category, _container, toLower _className];
+    private _key = format ["%1:%2:%3:%4", _category, _container, _slot, toLower _className];
 
     if (_key in _itemsByKey) exitWith {
         private _existing = _itemsByKey get _key;
@@ -99,7 +108,8 @@ private _fnc_addLine = {
         ["name", _displayName],
         ["priceValue", [_className, _category, "gear"] call FLO_fnc_storePriceClass],
         ["quantity", _quantity],
-        ["container", _container]
+        ["container", _container],
+        ["slot", _slot]
     ]];
 
     _order pushBack _key;
@@ -124,34 +134,37 @@ private _fnc_addCargoPairs = {
     private _weapon = _x select 0;
     private _items = _x select 1;
     private _magazines = _x select 2;
+    private _slot = _x select 3;
 
-    [_weapon, "auto", 1] call _fnc_addLine;
+    [_weapon, "auto", 1, _slot] call _fnc_addLine;
 
     {
-        [_x, "auto", 1] call _fnc_addLine;
+        [_x, "auto", 1, _slot] call _fnc_addLine;
     } forEach _items;
 
     {
         [_x, "auto", 1] call _fnc_addLine;
     } forEach _magazines;
 } forEach [
-    [primaryWeapon player, primaryWeaponItems player, primaryWeaponMagazine player],
-    [handgunWeapon player, handgunItems player, handgunMagazine player],
-    [secondaryWeapon player, secondaryWeaponItems player, secondaryWeaponMagazine player]
+    [primaryWeapon player, primaryWeaponItems player, primaryWeaponMagazine player, "primary"],
+    [handgunWeapon player, handgunItems player, handgunMagazine player, "handgun"],
+    [secondaryWeapon player, secondaryWeaponItems player, secondaryWeaponMagazine player, "secondary"]
 ];
 
 {
-    [_x, "auto", 1] call _fnc_addLine;
+    [_x, "auto", 1, "assigned"] call _fnc_addLine;
 } forEach assignedItems player;
 
 {
-    [_x, "auto", 1] call _fnc_addLine;
+    _x params ["_className", "_slot"];
+    [_className, "auto", 1, _slot] call _fnc_addLine;
 } forEach [
-    uniform player,
-    vest player,
-    backpack player,
-    headgear player,
-    binocular player
+    [uniform player, "uniform"],
+    [vest player, "vest"],
+    [backpack player, "backpack"],
+    [headgear player, "headgear"],
+    [goggles player, "facewear"],
+    [binocular player, "binocular"]
 ];
 
 {

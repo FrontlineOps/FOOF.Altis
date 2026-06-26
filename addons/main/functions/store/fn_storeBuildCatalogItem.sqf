@@ -11,10 +11,14 @@ if (_entryKind isEqualTo "vehicle") then {
         if (_category isEqualTo "backpacks") then {
             _cfg = configFile >> "CfgVehicles" >> _className;
         } else {
-            if ((_category isEqualTo "misc") && {isClass (configFile >> "CfgMagazines" >> _className)} && {!(isClass (configFile >> "CfgWeapons" >> _className))}) then {
-                _cfg = configFile >> "CfgMagazines" >> _className;
+            if (_category isEqualTo "facewear") then {
+                _cfg = configFile >> "CfgGlasses" >> _className;
             } else {
-                _cfg = configFile >> "CfgWeapons" >> _className;
+                if ((_category isEqualTo "misc") && {isClass (configFile >> "CfgMagazines" >> _className)} && {!(isClass (configFile >> "CfgWeapons" >> _className))}) then {
+                    _cfg = configFile >> "CfgMagazines" >> _className;
+                } else {
+                    _cfg = configFile >> "CfgWeapons" >> _className;
+                };
             };
         };
     };
