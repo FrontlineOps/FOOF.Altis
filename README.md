@@ -91,6 +91,10 @@ Commander/build-authorized players can request AO upgrades remotely from the pan
 
 The server validates request owner, player life state, side, AO ownership, held state, command authority, max level, pending upgrade state, physical proximity for discount eligibility, and faction balance before spending money or starting the upgrade timer.
 
+## Store Purchases
+
+Store-purchased uniforms, vests, backpacks, and vehicles are stripped of inherited class cargo before use. Only gear explicitly bought through the cart is added to player containers, and purchased vehicles spawn with empty cargo inventory while retaining their normal vehicle weapons and turrets.
+
 ## Default Spawn Kits
 
 Fresh, non-persisted players receive a default kit from their side's selected faction. The server picks the first usable infantry unit from faction-authored data: `CfgGroups` unit order first, then playable `CfgVehicles` infantry fallback. A candidate only needs to be a valid infantry class with a usable unit loadout.

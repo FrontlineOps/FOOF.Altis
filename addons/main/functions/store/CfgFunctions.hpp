@@ -16,6 +16,7 @@ class Store {
     class storeCategoryForVehicle {};
     class storeCategoryForWeapon {};
     class storeCheckout {};
+    class storeClearCargo {};
     class storeCollectVehicleWeapons {};
     class storeCurrentLoadoutKitItems {};
     class storeDeploymentFundBalance {};

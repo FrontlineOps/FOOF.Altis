@@ -141,6 +141,7 @@ if (_needsWater isNotEqualTo (surfaceIsWater _finalPosAGL)) exitWith {
 private _vehicle = [_className, _finalPos, _finalDir, _vectorUp] call IDS_Logistics_fnc_spawnEntity;
 if (isNull _vehicle) exitWith { ["Vehicle placement failed."] call _fail; };
 
+[_vehicle, true] call FLO_fnc_storeClearCargo;
 _vehicle lock 0;
 
 [

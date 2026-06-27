@@ -46,14 +46,17 @@ if ((typeName _gearEntries) isNotEqualTo "ARRAY") exitWith {};
             case "uniforms": {
                 removeUniform player;
                 player forceAddUniform _className;
+                [uniformContainer player] call FLO_fnc_storeClearCargo;
             };
             case "vests": {
                 removeVest player;
                 player addVest _className;
+                [vestContainer player] call FLO_fnc_storeClearCargo;
             };
             case "backpacks": {
                 removeBackpack player;
                 player addBackpack _className;
+                [backpackContainer player] call FLO_fnc_storeClearCargo;
             };
             case "headgear": {
                 removeHeadgear player;
