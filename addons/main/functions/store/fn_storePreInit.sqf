@@ -115,6 +115,7 @@ FLO_StoreSupportCatalogItems = [
     ["ACE_epinephrine", "gear", "misc"],
     ["ACE_fieldDressing", "gear", "misc"],
     ["ACE_MapTools", "gear", "misc"],
+    ["ACE_microDAGR", "gear", "misc"],
     ["ACE_morphine", "gear", "misc"],
     ["ACE_packingBandage", "gear", "misc"],
     ["ACE_personalAidKit", "gear", "misc"],
@@ -143,15 +144,5 @@ FLO_StoreSupportCatalogItems = [
     ["ACRE_VHF30108MAST", "gear", "backpacks"],
     ["ACRE_VHF30108MASTB", "gear", "backpacks"],
 
-    ["ItemGPS", "gear", "misc"],
-    ["ItemcTab", "gear", "misc"],
-    ["ItemAndroid", "gear", "misc"],
-    ["ItemcTabHCam", "gear", "misc"],
-    ["ItemMicroDAGR", "gear", "misc"],
-    ["ItemcTabMisc", "gear", "misc"],
-    ["ItemAndroidMisc", "gear", "misc"],
-    ["ItemMicroDAGRMisc", "gear", "misc"],
-    ["ItemcTabMISC", "gear", "misc"],
-    ["ItemAndroidMISC", "gear", "misc"],
-    ["ItemMicroDAGRMISC", "gear", "misc"]
+    ["ItemGPS", "gear", "misc"]
 ];
