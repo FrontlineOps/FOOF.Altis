@@ -66,9 +66,6 @@ class Store {
     class storeSendApprovalsResponse {};
     class storeStartVehiclePlacement {};
     class storeStringMatchesPatterns {};
-    class storeSupportClassRejected {};
-    class storeSupportConfigMatchesSource {};
-    class storeSupportSourceLoaded {};
     class storeUpdateDialog {};
     class storeUpdateApprovalsDialog {};
     class storeValidateAccess {};
