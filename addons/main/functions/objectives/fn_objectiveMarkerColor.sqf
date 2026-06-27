@@ -1,7 +1,5 @@
 params ["_ownerKey", ["_state", "held"], ["_progressSideKey", "NONE"]];
 
-if (_state isEqualTo "contested") exitWith { "ColorYellow" };
-
 private _sideKey = _ownerKey;
 
 if ((_state isEqualTo "capturing") && {_progressSideKey isNotEqualTo "NONE"}) then {

@@ -57,7 +57,7 @@ if ((_objective get "owner") isNotEqualTo _side) exitWith {
 };
 
 if ((_objective get "state") isNotEqualTo "held") exitWith {
-    ["AO must be uncontested before it can be upgraded.", "warning"] call _notify;
+    ["AO must be held before it can be upgraded.", "warning"] call _notify;
 };
 
 if !([_player, "build"] call FLO_fnc_commandPlayerHasAuthority) exitWith {

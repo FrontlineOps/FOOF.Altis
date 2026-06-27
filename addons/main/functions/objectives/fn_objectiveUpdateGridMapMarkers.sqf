@@ -18,13 +18,11 @@ private _activeMarkers = createHashMap;
     ];
 
     private _baseMarkerId = format ["FLO_grid_%1_sector", _cellId];
-    private _contestMarkerId = format ["FLO_grid_%1_contested", _cellId];
     private _captureMarkerId = format ["FLO_grid_%1_capture", _cellId];
     private _baseColor = [_ownerKey, _state, _progressSideKey] call FLO_fnc_objectiveMarkerColor;
     private _baseAlpha = switch (_state) do {
         case "held": { 0.36 };
         case "capturing": { 0.34 };
-        case "contested": { 0.30 };
         default { 0.22 };
     };
     private _renderKey = str [_ownerKey, _state, _progress, _progressSideKey];
@@ -50,35 +48,6 @@ private _activeMarkers = createHashMap;
 
     if (_fullRefresh) then {
         _activeMarkers set [_baseMarkerId, true];
-    };
-
-    if (_state isEqualTo "contested") then {
-        if (_needsStateUpdate) then {
-            [
-                _contestMarkerId,
-                _position,
-                "RECTANGLE",
-                "",
-                "ColorYellow",
-                0.62,
-                [_halfSize, _halfSize],
-                "DiagGrid",
-                "",
-                0,
-                FLO_ObjectiveClientGridMarkers
-            ] call FLO_fnc_objectiveUpsertMapMarker;
-        };
-
-        if (_fullRefresh) then {
-            _activeMarkers set [_contestMarkerId, true];
-        };
-    } else {
-        if (_contestMarkerId in FLO_ObjectiveClientGridMarkers) then {
-            private _contestMarker = FLO_ObjectiveClientGridMarkers get _contestMarkerId;
-
-            deleteMarkerLocal _contestMarker;
-            FLO_ObjectiveClientGridMarkers deleteAt _contestMarkerId;
-        };
     };
 
     if ((_state isEqualTo "capturing") && {_progress > 0}) then {

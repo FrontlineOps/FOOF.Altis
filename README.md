@@ -89,7 +89,7 @@ The objective system is server-authoritative. Clients receive sanitized objectiv
 
 Commander/build-authorized players can request AO upgrades remotely from the panel at full price. If the requester is physically inside the selected AO, the server applies the in-person upgrade discount. The current remote formula is `nextLevel * resourceWeight * 1500`, rounded up to the nearest `$100`; the current in-person discount is `25%`.
 
-The server validates request owner, player life state, side, AO ownership, held/uncontested state, command authority, max level, pending upgrade state, physical proximity for discount eligibility, and faction balance before spending money or starting the upgrade timer.
+The server validates request owner, player life state, side, AO ownership, held state, command authority, max level, pending upgrade state, physical proximity for discount eligibility, and faction balance before spending money or starting the upgrade timer.
 
 ## Default Spawn Kits
 

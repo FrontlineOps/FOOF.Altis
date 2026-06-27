@@ -37,7 +37,6 @@ private _activeMarkers = createHashMap;
         default { "mil_dot" };
     };
     private _iconAlpha = switch (_objectiveState) do {
-        case "contested": { 0.84 };
         case "capturing": { 0.78 };
         case "held": { 0.64 };
         default { 0.50 };
@@ -49,12 +48,11 @@ private _activeMarkers = createHashMap;
         default { [0.24, 0.24] };
     };
     private _haloAlpha = switch (_objectiveState) do {
-        case "contested": { 0.34 };
         case "capturing": { 0.30 };
         case "held": { 0.16 };
         default { 0.12 };
     };
-    private _haloBrush = ["Border", "DiagGrid"] select (_objectiveState in ["contested", "capturing"]);
+    private _haloBrush = ["Border", "DiagGrid"] select (_objectiveState isEqualTo "capturing");
 
     [
         _haloMarkerId,

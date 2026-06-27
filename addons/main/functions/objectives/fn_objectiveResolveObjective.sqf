@@ -12,7 +12,6 @@ private _requiredWeightRatio = [_objective] call FLO_fnc_objectiveRequiredWeight
 private _eastWeight = 0;
 private _westWeight = 0;
 private _totalWeight = 0;
-private _contestedCells = 0;
 
 {
     private _cell = FLO_ObjectiveCells get _x;
@@ -27,10 +26,6 @@ private _contestedCells = 0;
 
     if (_cellOwner isEqualTo west) then {
         _westWeight = _westWeight + _weight;
-    };
-
-    if ((_cell get "state") isEqualTo "contested") then {
-        _contestedCells = _contestedCells + 1;
     };
 } forEach _cellIds;
 
@@ -54,21 +49,9 @@ if (!_eastQualifies && !_westQualifies) then {
 };
 
 if (_newOwner isEqualTo sideUnknown) then {
-    _newState = ["neutral", "contested"] select ((_eastWeight + _westWeight) > 0);
+    _newState = "neutral";
 } else {
     _newState = "held";
-
-    if (_contestedCells > 0) then {
-        _newState = "contested";
-    };
-
-    if ((_newOwner isEqualTo east) && {_westWeight > 0}) then {
-        _newState = "contested";
-    };
-
-    if ((_newOwner isEqualTo west) && {_eastWeight > 0}) then {
-        _newState = "contested";
-    };
 };
 
 _objective set ["owner", _newOwner];
