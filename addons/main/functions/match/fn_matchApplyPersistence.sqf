@@ -23,6 +23,7 @@ FLO_MatchState set ["operationSectorObjectiveIds", _record get "operationSectorO
 FLO_MatchState set ["operationSecondaryObjectiveIds", _record get "operationSecondaryObjectiveIds"];
 FLO_MatchState set ["operationInitialSecondaryOwners", _record get "operationInitialSecondaryOwners"];
 FLO_MatchState set ["operationInitialOwner", _record get "operationInitialOwner"];
+FLO_MatchState set ["operationOffensiveSide", _record get "operationOffensiveSide"];
 FLO_MatchState set ["operationAttackSide", _record get "operationAttackSide"];
 FLO_MatchState set ["operationDefendSide", _record get "operationDefendSide"];
 FLO_MatchState set ["operationInitialWestCells", _record get "operationInitialWestCells"];
@@ -41,8 +42,10 @@ FLO_MatchState set ["plannedSectorPosition", _record get "plannedSectorPosition"
 FLO_MatchState set ["plannedSectorRadius", _record get "plannedSectorRadius"];
 FLO_MatchState set ["plannedSectorObjectiveIds", _record get "plannedSectorObjectiveIds"];
 FLO_MatchState set ["plannedSecondaryObjectiveIds", _record get "plannedSecondaryObjectiveIds"];
+FLO_MatchState set ["plannedOffensiveSide", _record get "plannedOffensiveSide"];
 FLO_MatchState set ["plannedAttackSide", _record get "plannedAttackSide"];
 FLO_MatchState set ["plannedDefendSide", _record get "plannedDefendSide"];
+FLO_MatchState set ["nextOffensiveSide", _record get "nextOffensiveSide"];
 FLO_MatchState set ["campaignScoreWest", _record get "campaignScoreWest"];
 FLO_MatchState set ["campaignScoreEast", _record get "campaignScoreEast"];
 

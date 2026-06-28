@@ -295,7 +295,7 @@
         .objective-meta {
             margin-top: 12px;
             display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 8px;
         }
 
@@ -459,6 +459,10 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
+            .objective-meta {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
             .time {
                 font-size: 54px;
             }
@@ -537,6 +541,7 @@
                     <div class="objective-name" id="objectiveName">No objective selected</div>
                     <div class="objective-meta">
                         <div><span class="k">Initial Owner</span><span class="v" id="initialOwner">NONE</span></div>
+                        <div><span class="k">Offensive</span><span class="v" id="offensiveSide">BOTH</span></div>
                         <div><span class="k">Attack</span><span class="v" id="attackSide">BOTH</span></div>
                         <div><span class="k">Defend</span><span class="v" id="defendSide">NONE</span></div>
                     </div>
@@ -757,6 +762,7 @@
                     stateText = "Frontline Selection";
                     task = "Planned";
                     text("initialOwner", "TBD");
+                    text("offensiveSide", sideName(snapshot.plannedOffensiveSide));
                     text("attackSide", sideName(snapshot.plannedAttackSide));
                     text("defendSide", sideName(snapshot.plannedDefendSide));
                 } else {
@@ -764,6 +770,7 @@
                     stateText = phase === "operation" ? "Active Operation" : "Setup Phase";
                     task = phase === "operation" ? "Active" : "Standby";
                     text("initialOwner", sideName(snapshot.operationInitialOwner));
+                    text("offensiveSide", sideName(phase === "operation" ? snapshot.operationOffensiveSide : snapshot.nextOffensiveSide));
                     text("attackSide", sideName(snapshot.operationAttackSide));
                     text("defendSide", sideName(snapshot.operationDefendSide));
                 }

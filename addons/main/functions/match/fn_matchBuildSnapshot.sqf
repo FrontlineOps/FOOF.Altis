@@ -22,6 +22,7 @@ createHashMapFromArray [
     ["operationSectorObjectiveIds", FLO_MatchState get "operationSectorObjectiveIds"],
     ["operationSecondaryObjectiveIds", FLO_MatchState get "operationSecondaryObjectiveIds"],
     ["operationInitialOwner", FLO_MatchState get "operationInitialOwner"],
+    ["operationOffensiveSide", FLO_MatchState get "operationOffensiveSide"],
     ["operationAttackSide", FLO_MatchState get "operationAttackSide"],
     ["operationDefendSide", FLO_MatchState get "operationDefendSide"],
     ["operationWestSectorPresenceScore", FLO_MatchState get "operationWestSectorPresenceScore"],
@@ -36,8 +37,10 @@ createHashMapFromArray [
     ["plannedSectorRadius", FLO_MatchState get "plannedSectorRadius"],
     ["plannedSectorObjectiveIds", FLO_MatchState get "plannedSectorObjectiveIds"],
     ["plannedSecondaryObjectiveIds", FLO_MatchState get "plannedSecondaryObjectiveIds"],
+    ["plannedOffensiveSide", FLO_MatchState get "plannedOffensiveSide"],
     ["plannedAttackSide", FLO_MatchState get "plannedAttackSide"],
     ["plannedDefendSide", FLO_MatchState get "plannedDefendSide"],
+    ["nextOffensiveSide", FLO_MatchState get "nextOffensiveSide"],
     ["campaignScoreWest", FLO_MatchState get "campaignScoreWest"],
     ["campaignScoreEast", FLO_MatchState get "campaignScoreEast"],
     ["dayResults", _results]

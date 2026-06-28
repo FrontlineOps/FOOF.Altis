@@ -23,6 +23,7 @@ FLO_MatchState = createHashMapFromArray [
     ["operationSecondaryObjectiveIds", []],
     ["operationInitialSecondaryOwners", []],
     ["operationInitialOwner", "NONE"],
+    ["operationOffensiveSide", "BOTH"],
     ["operationAttackSide", "BOTH"],
     ["operationDefendSide", "NONE"],
     ["operationInitialWestCells", [west] call FLO_fnc_matchSideOwnedCellCount],
@@ -41,8 +42,10 @@ FLO_MatchState = createHashMapFromArray [
     ["plannedSectorRadius", 0],
     ["plannedSectorObjectiveIds", []],
     ["plannedSecondaryObjectiveIds", []],
+    ["plannedOffensiveSide", "BOTH"],
     ["plannedAttackSide", "BOTH"],
     ["plannedDefendSide", "NONE"],
+    ["nextOffensiveSide", "BOTH"],
     ["campaignScoreWest", 0],
     ["campaignScoreEast", 0]
 ];

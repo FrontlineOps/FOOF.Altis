@@ -1,9 +1,9 @@
 if (!isServer) exitWith {};
 
-private _selection = [FLO_MatchState get "plannedObjectiveId"] call FLO_fnc_matchSelectOperationObjective;
+private _selection = [FLO_MatchState get "plannedObjectiveId", FLO_MatchState get "nextOffensiveSide"] call FLO_fnc_matchSelectOperationObjective;
 
 if ((count _selection) isEqualTo 0) then {
-    _selection = [] call FLO_fnc_matchSelectOperationObjective;
+    _selection = ["", FLO_MatchState get "nextOffensiveSide"] call FLO_fnc_matchSelectOperationObjective;
 };
 
 if ((count _selection) isEqualTo 0) exitWith {
@@ -35,6 +35,7 @@ FLO_MatchState set ["operationSectorObjectiveIds", _selection get "sectorObjecti
 FLO_MatchState set ["operationSecondaryObjectiveIds", _secondaryObjectiveIds];
 FLO_MatchState set ["operationInitialSecondaryOwners", _initialSecondaryOwners];
 FLO_MatchState set ["operationInitialOwner", _selection get "owner"];
+FLO_MatchState set ["operationOffensiveSide", _selection get "offensiveSide"];
 FLO_MatchState set ["operationAttackSide", _selection get "attackSide"];
 FLO_MatchState set ["operationDefendSide", _selection get "defendSide"];
 FLO_MatchState set ["operationInitialWestCells", [west] call FLO_fnc_matchSideOwnedCellCount];
@@ -53,16 +54,17 @@ FLO_MatchState set ["plannedSectorPosition", [0, 0, 0]];
 FLO_MatchState set ["plannedSectorRadius", 0];
 FLO_MatchState set ["plannedSectorObjectiveIds", []];
 FLO_MatchState set ["plannedSecondaryObjectiveIds", []];
+FLO_MatchState set ["plannedOffensiveSide", FLO_MatchState get "nextOffensiveSide"];
 FLO_MatchState set ["plannedAttackSide", "BOTH"];
 FLO_MatchState set ["plannedDefendSide", "NONE"];
 FLO_MatchState set ["revision", (FLO_MatchState get "revision") + 1];
 
 diag_log format [
-    "[FLO][Match] Day %1 operation %2 started objective=%3 owner=%4 attack=%5 defend=%6 duration=%7 sectorRadius=%8 secondaries=%9",
+    "[FLO][Match] Day %1 operation %2 started objective=%3 offensive=%4 attack=%5 defend=%6 duration=%7 sectorRadius=%8 secondaries=%9",
     FLO_MatchState get "campaignDay",
     FLO_MatchState get "operationId",
     _selection get "objectiveName",
-    _selection get "owner",
+    _selection get "offensiveSide",
     _selection get "attackSide",
     _selection get "defendSide",
     FLO_MatchOperationDuration,

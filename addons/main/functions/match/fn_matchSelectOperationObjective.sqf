@@ -1,10 +1,29 @@
-params [["_preferredObjectiveId", ""]];
+params [["_preferredObjectiveId", ""], ["_offensiveSide", "BOTH"]];
 
 private _candidateIds = keys FLO_Objectives;
+private _hasOffensiveSide = _offensiveSide in ["WEST", "EAST"];
+private _offensiveOwner = sideUnknown;
+private _defensiveOwner = sideUnknown;
 
 if (_preferredObjectiveId isNotEqualTo "") then {
     if (_preferredObjectiveId in FLO_Objectives) then {
         _candidateIds = [_preferredObjectiveId];
+    };
+};
+
+if (_hasOffensiveSide) then {
+    _offensiveOwner = [west, east] select (_offensiveSide isEqualTo "EAST");
+    _defensiveOwner = [east, west] select (_offensiveSide isEqualTo "EAST");
+
+    if (_preferredObjectiveId isEqualTo "") then {
+        private _offensiveCandidateIds = _candidateIds select {
+            private _objective = FLO_Objectives get _x;
+            (_objective get "owner") isNotEqualTo _offensiveOwner
+        };
+
+        if (_offensiveCandidateIds isNotEqualTo []) then {
+            _candidateIds = _offensiveCandidateIds;
+        };
     };
 };
 
@@ -83,6 +102,39 @@ private _best = createHashMap;
         _score = _score + 120;
     };
 
+    if (_hasOffensiveSide) then {
+        private _friendlyNear = [_westNear, _eastNear] select (_offensiveSide isEqualTo "EAST");
+        private _enemyNear = [_eastNear, _westNear] select (_offensiveSide isEqualTo "EAST");
+
+        if (_owner isEqualTo _defensiveOwner) then {
+            _score = _score + 900;
+        };
+
+        if (_owner isEqualTo sideUnknown) then {
+            _score = _score + 300;
+        };
+
+        if (_owner isEqualTo _offensiveOwner) then {
+            _score = _score - 1200;
+        };
+
+        if (_friendlyNear && {_enemyNear}) then {
+            _score = _score + 350;
+        };
+
+        if (_friendlyNear && {_owner isEqualTo _defensiveOwner}) then {
+            _score = _score + 250;
+        };
+
+        if (!_friendlyNear) then {
+            _score = _score - 450;
+        };
+
+        if (!_enemyNear && {_owner isEqualTo _defensiveOwner}) then {
+            _score = _score - 250;
+        };
+    };
+
     _score = _score + (1000 - ((_distanceBalance min 10000) / 10));
     _score = _score + (500 - ((_averageDistance min 5000) / 10));
 
@@ -101,6 +153,10 @@ private _best = createHashMap;
             _defendSide = "EAST";
         };
 
+        if (_hasOffensiveSide && {_owner isEqualTo sideUnknown}) then {
+            _attackSide = _offensiveSide;
+        };
+
         _bestScore = _score;
         _best = createHashMapFromArray [
             ["objectiveId", _objective get "id"],
@@ -108,6 +164,7 @@ private _best = createHashMap;
             ["objectivePosition", _position],
             ["objectiveRadius", _objective get "displayRadius"],
             ["owner", _ownerKey],
+            ["offensiveSide", _offensiveSide],
             ["attackSide", _attackSide],
             ["defendSide", _defendSide],
             ["score", _score],
