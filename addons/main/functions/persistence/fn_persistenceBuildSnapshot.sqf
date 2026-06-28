@@ -93,6 +93,8 @@ private _command = [
     ["sides", _commandSides]
 ];
 
+private _match = [] call FLO_fnc_matchBuildPersistence;
+
 private _cellRecords = [];
 
 {
@@ -305,6 +307,7 @@ private _playerRecords = [];
     ["resources", _resources],
     ["tickets", _tickets],
     ["command", _command],
+    ["match", _match],
     ["objectives", _objectives],
     ["fobs", _fobs],
     ["idsLogistics", _idsRecords],

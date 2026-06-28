@@ -21,6 +21,7 @@ class CfgFunctions {
         #include "functions\intel\CfgFunctions.hpp"
         #include "functions\tickets\CfgFunctions.hpp"
         #include "functions\command\CfgFunctions.hpp"
+        #include "functions\match\CfgFunctions.hpp"
         #include "functions\objectives\CfgFunctions.hpp"
         #include "functions\resources\CfgFunctions.hpp"
         #include "functions\fob\CfgFunctions.hpp"
@@ -38,6 +39,7 @@ class CfgFunctions {
 #include "ui\command\CommandVoteDialog.hpp"
 #include "ui\deploy\DeployDialog.hpp"
 #include "ui\intel\IntelDialog.hpp"
+#include "ui\match\MatchDialog.hpp"
 #include "ui\objective\ObjectiveAreaDialog.hpp"
 #include "ui\store\StoreDialog.hpp"
 #include "ui\store\StoreApprovalsDialog.hpp"
@@ -263,6 +265,16 @@ class CfgRemoteExec {
         };
 
         class FLO_fnc_clientAcreRequestGroupChannel {
+            allowedTargets = 2;
+            jip = 0;
+        };
+
+        class FLO_fnc_matchReceiveSnapshot {
+            allowedTargets = 0;
+            jip = 0;
+        };
+
+        class FLO_fnc_matchRequestSnapshot {
             allowedTargets = 2;
             jip = 0;
         };

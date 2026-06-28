@@ -29,6 +29,7 @@ See `LICENSE.md` for the full license terms.
 - Major AO system for towns, villages, ports, terminals, capitals, and strategic areas
 - Frontline-focused capture rules
 - AO pressure and assault windows
+- Server-authoritative match phase manager for setup, frontline selection, operation cycles, and campaign-day scoring
 - AO command panel for side-wide held AO upgrades
 - FOB and COP deployment systems
 - Commander voting and faction selection
@@ -54,6 +55,7 @@ See `LICENSE.md` for the full license terms.
 - Spawn/deployment system: `addons/main/functions/spawns/`
 - Store system: `addons/main/functions/store/`
 - Ticket system: `addons/main/functions/tickets/`
+- Match phase manager: `addons/main/functions/match/`
 - Notification system: `addons/main/functions/notifications/`
 - Intel system: `addons/main/functions/intel/`
 - IDS Logistics: `addons/main/IDS_Logistics/`
@@ -90,6 +92,22 @@ The objective system is server-authoritative. Clients receive sanitized objectiv
 Commander/build-authorized players can request AO upgrades remotely from the panel at full price. If the requester is physically inside the selected AO, the server applies the in-person upgrade discount. The current remote formula is `nextLevel * resourceWeight * 1500`, rounded up to the nearest `$100`; the current in-person discount is `25%`.
 
 The server validates request owner, player life state, side, AO ownership, held state, command authority, max level, pending upgrade state, physical proximity for discount eligibility, and faction balance before spending money or starting the upgrade timer.
+
+## Match Flow
+
+The match phase manager is server-authoritative and persists with the rest of the campaign state. It starts each campaign with a 10 minute setup phase, moves into a 10 minute frontline selection phase, then runs one-hour operation cycles. During frontline selection the server picks an upcoming operation objective from generated AO data, favoring areas where WEST and EAST territory meet, frontline objectives, neutral/high-value areas, and objectives that are reasonably balanced between both deployment zones.
+
+When an operation starts, the selected AO is locked into the match state with its initial owner, attacker/defender labels, initial owned cell counts, initial ticket counts, operation-sector objective list, and secondary AO owner baselines. At the end of the operation the server scores that campaign day from primary objective ownership, primary capture swing, secondary AOs held or flipped inside the operation sector, passive player presence inside the sector, territory gained, held AO value, and enemy tickets drained. The result is announced to all players, saved through persistence, and the next campaign day begins from the current saved war state.
+
+Clients receive sanitized match snapshots for future UI use and JIP synchronization, but the server owns phase timing, operation objective selection, scoring, announcements, and persistence.
+
+Players receive a phase announcement when their client receives a new setup, frontline, or operation snapshot, including JIP clients who were not present for the original server phase transition. During frontline selection and active operations, clients draw a bright non-filled map sector ring around the broader operation area. The selected AO remains the operation anchor, but the visible sector is computed from that AO, surrounding grid cells, and nearby WEST/EAST contact edges so it can naturally cover multiple zones or nearby AOs. `Ctrl+Shift+M` opens the Match Flow panel, which shows the current phase, countdown, operation objective, attacker/defender labels, a scoreboard with scoring-source breakdowns, and recent campaign-day results from the server match snapshot.
+
+Match flow tuning is exposed through CBA Addon Options. Server/global settings under `FOOF > Match Flow` control setup duration, frontline selection duration, and operation duration. The defaults are 10 minutes, 10 minutes, and 1 hour. Setup and frontline duration can be set from 0 to 60 minutes; operation duration can be set from 10 minutes to 24 hours.
+
+Server/global settings under `FOOF > Operation Scoring` control the campaign-day scoring weights for holding the operation objective, flipping the objective owner, holding/flipping secondary AOs inside the sector, player-minutes inside the sector, gaining territory cells, held AO value, and enemy tickets drained. If an admin changes the duration for the currently active phase, the server recalculates that phase timer and publishes a fresh match snapshot. Scoring changes are read when the operation is scored, while sector presence score accrues during Phase 2 using the current player-minute setting.
+
+Server/global settings under `FOOF > Operation Sector` control how large the bright operation-sector map ring can become. The sector buffer, minimum radius, and maximum radius are CBA settings; changing any of them during frontline selection or an active operation rebuilds the current sector and publishes a fresh snapshot.
 
 ## Store Purchases
 
@@ -131,4 +149,4 @@ Both forms disable persistence, stop the persistence save loop, clear the active
 
 ## Known Issues
 
-FOOF is not gameplay-complete yet. Respawn waves, victory rules, external persistence backends, and full match flow are still foundation work.
+FOOF is not gameplay-complete yet. Respawn waves, external persistence backends, and the dedicated match-flow HTML UI are still foundation work.

@@ -1,0 +1,842 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FOOF Match Flow</title>
+    <style>
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background: transparent;
+            color: #ecf6fb;
+            font-family: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+            letter-spacing: 0;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        button {
+            font: inherit;
+        }
+
+        .shell {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr);
+            gap: 12px;
+            padding: 14px;
+            background:
+                linear-gradient(135deg, rgba(8, 19, 25, 0.96), rgba(5, 11, 15, 0.98)),
+                repeating-linear-gradient(90deg, rgba(72, 175, 205, 0.05) 0, rgba(72, 175, 205, 0.05) 1px, transparent 1px, transparent 64px);
+            border: 1px solid rgba(55, 177, 220, 0.36);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04), 0 18px 60px rgba(0, 0, 0, 0.55);
+            clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
+        }
+
+        .topbar {
+            min-height: 80px;
+            display: grid;
+            grid-template-columns: minmax(220px, 0.72fr) minmax(300px, 1fr) auto;
+            gap: 12px;
+            align-items: stretch;
+        }
+
+        .title {
+            padding: 12px 14px;
+            background: rgba(8, 28, 36, 0.94);
+            border: 1px solid rgba(44, 157, 197, 0.38);
+            clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 0 100%);
+        }
+
+        .eyebrow {
+            color: #20d6ff;
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 13px;
+        }
+
+        .title h1 {
+            margin: 2px 0 0;
+            font-size: 34px;
+            line-height: 0.95;
+            text-transform: uppercase;
+        }
+
+        .phase-strip {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .phase-step {
+            position: relative;
+            min-height: 76px;
+            padding: 10px 12px;
+            overflow: hidden;
+            background: rgba(5, 17, 23, 0.92);
+            border: 1px solid rgba(95, 129, 145, 0.32);
+            clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+        }
+
+        .phase-step.active {
+            border-color: rgba(39, 210, 255, 0.82);
+            background: linear-gradient(135deg, rgba(8, 64, 86, 0.94), rgba(8, 24, 31, 0.96));
+            box-shadow: inset 0 -3px 0 rgba(255, 179, 56, 0.85);
+        }
+
+        .phase-num {
+            color: #ffb238;
+            font-weight: 900;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .phase-name {
+            margin-top: 6px;
+            color: #f4fbff;
+            font-size: 20px;
+            font-weight: 900;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .phase-copy {
+            margin-top: 2px;
+            color: #9fb2bf;
+            font-size: 13px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .actions {
+            display: grid;
+            grid-template-columns: 92px 72px;
+            gap: 8px;
+        }
+
+        .action {
+            height: 100%;
+            border: 1px solid rgba(35, 185, 232, 0.75);
+            background: rgba(11, 85, 120, 0.92);
+            color: #f5fbff;
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+        }
+
+        .action.close {
+            border-color: rgba(236, 88, 88, 0.72);
+            background: rgba(92, 24, 26, 0.92);
+        }
+
+        .grid {
+            min-height: 0;
+            display: grid;
+            grid-template-columns: minmax(320px, 0.86fr) minmax(360px, 1.14fr);
+            gap: 12px;
+        }
+
+        .column {
+            min-height: 0;
+            display: grid;
+            gap: 12px;
+        }
+
+        .left {
+            grid-template-rows: minmax(170px, 0.34fr) minmax(380px, 1fr);
+        }
+
+        .right {
+            grid-template-rows: minmax(220px, 0.44fr) minmax(260px, 1fr);
+        }
+
+        .panel {
+            min-height: 0;
+            padding: 14px;
+            overflow: hidden;
+            background: rgba(8, 24, 32, 0.91);
+            border: 1px solid rgba(54, 149, 184, 0.34);
+            clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(65, 155, 190, 0.28);
+            padding-bottom: 8px;
+        }
+
+        .panel-label {
+            color: #20d6ff;
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .panel-title {
+            color: #f4fbff;
+            font-size: 26px;
+            font-weight: 900;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .badge {
+            min-width: 76px;
+            padding: 5px 8px;
+            color: #ffb238;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            border: 1px solid rgba(255, 178, 56, 0.45);
+            background: rgba(54, 39, 14, 0.72);
+        }
+
+        .timer {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .time {
+            font-family: "Roboto Condensed", "Arial Narrow", Arial, sans-serif;
+            color: #ffffff;
+            font-size: 74px;
+            line-height: 0.85;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .time-sub {
+            color: #9db4c0;
+            font-size: 15px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .radial {
+            width: 112px;
+            height: 112px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: conic-gradient(#20d6ff var(--progress), rgba(36, 72, 87, 0.7) 0);
+            box-shadow: inset 0 0 0 10px rgba(5, 14, 18, 0.96);
+        }
+
+        .radial span {
+            width: 74px;
+            height: 74px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: rgba(8, 24, 32, 0.98);
+            color: #ffb238;
+            font-weight: 900;
+        }
+
+        .score-row,
+        .score-breakdown-head,
+        .score-breakdown-row,
+        .result-row {
+            padding: 9px 10px;
+            background: rgba(2, 10, 14, 0.56);
+            border: 1px solid rgba(67, 123, 143, 0.24);
+        }
+
+        .k {
+            display: block;
+            color: #8398a5;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .v {
+            display: block;
+            margin-top: 3px;
+            color: #f2f8fb;
+            font-size: 18px;
+            font-weight: 900;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .objective-name {
+            margin-top: 10px;
+            color: #ffffff;
+            font-size: 42px;
+            line-height: 0.95;
+            font-weight: 900;
+            text-transform: uppercase;
+            overflow-wrap: anywhere;
+        }
+
+        .objective-meta {
+            margin-top: 12px;
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .side-west {
+            color: #5fc3ff;
+        }
+
+        .side-east {
+            color: #ff7575;
+        }
+
+        .side-draw {
+            color: #ffb238;
+        }
+
+        .scoreboard {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+        }
+
+        .score-row {
+            min-height: 90px;
+        }
+
+        .score-side {
+            color: #9fb2bf;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .score-value {
+            margin-top: 6px;
+            color: #ffffff;
+            font-size: 42px;
+            line-height: 0.9;
+            font-weight: 900;
+        }
+
+        .bar {
+            height: 8px;
+            margin-top: 10px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .bar-fill {
+            height: 100%;
+            background: #20d6ff;
+        }
+
+        .score-row.east .bar-fill {
+            background: #ff6666;
+        }
+
+        .score-breakdown-head,
+        .score-breakdown-row {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 72px 72px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .score-breakdown-head {
+            margin-top: 12px;
+            color: #8198a5;
+            font-size: 12px;
+            font-weight: 900;
+            text-transform: uppercase;
+            background: rgba(2, 10, 14, 0.32);
+        }
+
+        .score-breakdown {
+            min-height: 0;
+            display: grid;
+            gap: 6px;
+            margin-top: 6px;
+            overflow: hidden;
+        }
+
+        .score-source {
+            min-width: 0;
+            color: #f0f7fb;
+            font-size: 14px;
+            font-weight: 900;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .score-points {
+            text-align: right;
+            font-size: 16px;
+            font-weight: 900;
+        }
+
+        .results {
+            display: grid;
+            gap: 7px;
+            max-height: 100%;
+            overflow: hidden;
+        }
+
+        .result-row {
+            display: grid;
+            grid-template-columns: 74px minmax(0, 1fr) 96px;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .result-day {
+            color: #20d6ff;
+            font-size: 13px;
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+
+        .result-main {
+            min-width: 0;
+        }
+
+        .result-obj {
+            color: #f2f8fb;
+            font-size: 16px;
+            font-weight: 900;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .result-score {
+            color: #8fa4af;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .empty {
+            display: grid;
+            place-items: center;
+            min-height: 90px;
+            color: #8fa4af;
+            font-weight: 900;
+            text-transform: uppercase;
+            border: 1px dashed rgba(58, 151, 184, 0.42);
+            background: rgba(1, 7, 10, 0.44);
+        }
+
+        @media (max-width: 900px) {
+            .topbar,
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .phase-strip {
+                grid-template-columns: 1fr;
+            }
+
+            .actions {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .time {
+                font-size: 54px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <section class="shell">
+        <header class="topbar">
+            <div class="title">
+                <div class="eyebrow">FOOF Operations</div>
+                <h1>Match Flow</h1>
+            </div>
+            <div class="phase-strip" id="phaseStrip"></div>
+            <div class="actions">
+                <button class="action" id="refresh" type="button">Refresh</button>
+                <button class="action close" id="close" type="button">Close</button>
+            </div>
+        </header>
+
+        <main class="grid">
+            <section class="column left">
+                <article class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-label">Current Phase</div>
+                            <div class="panel-title" id="phaseTitle">Waiting</div>
+                        </div>
+                    </div>
+                    <div class="timer">
+                        <div>
+                            <div class="time" id="timer">--:--</div>
+                            <div class="time-sub" id="timerSub">Awaiting server snapshot</div>
+                        </div>
+                        <div class="radial" id="radial" style="--progress: 0deg;"><span id="radialText">0%</span></div>
+                    </div>
+                </article>
+
+                <article class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-label">Campaign</div>
+                            <div class="panel-title">Scoreboard</div>
+                        </div>
+                    </div>
+                    <div class="scoreboard">
+                        <div class="score-row west">
+                            <div class="score-side side-west">WEST</div>
+                            <div class="score-value" id="westScore">0</div>
+                            <div class="bar"><div class="bar-fill" id="westBar"></div></div>
+                        </div>
+                        <div class="score-row east">
+                            <div class="score-side side-east">EAST</div>
+                            <div class="score-value" id="eastScore">0</div>
+                            <div class="bar"><div class="bar-fill" id="eastBar"></div></div>
+                        </div>
+                    </div>
+                    <div class="score-breakdown-head">
+                        <span>Source</span>
+                        <span>WEST</span>
+                        <span>EAST</span>
+                    </div>
+                    <div class="score-breakdown" id="scoreBreakdown"></div>
+                </article>
+            </section>
+
+            <section class="column right">
+                <article class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-label" id="objectiveLabel">Operation Objective</div>
+                            <div class="panel-title" id="objectiveState">Awaiting Assignment</div>
+                        </div>
+                        <div class="badge" id="taskBadge">Pending</div>
+                    </div>
+                    <div class="objective-name" id="objectiveName">No objective selected</div>
+                    <div class="objective-meta">
+                        <div><span class="k">Initial Owner</span><span class="v" id="initialOwner">NONE</span></div>
+                        <div><span class="k">Attack</span><span class="v" id="attackSide">BOTH</span></div>
+                        <div><span class="k">Defend</span><span class="v" id="defendSide">NONE</span></div>
+                    </div>
+                </article>
+
+                <article class="panel">
+                    <div class="panel-header">
+                        <div>
+                            <div class="panel-label">Debrief Log</div>
+                            <div class="panel-title">Recent Days</div>
+                        </div>
+                    </div>
+                    <div class="results" id="results"></div>
+                </article>
+            </section>
+        </main>
+    </section>
+
+    <script>
+        (function () {
+            var state = {
+                snapshot: {},
+                receivedAt: Date.now(),
+                secondsAtReceive: 0
+            };
+
+            var phaseMeta = [
+                { key: "setup", number: 0, name: "Setup", copy: "Command, squads, bases" },
+                { key: "frontline", number: 1, name: "Frontline", copy: "Contact line selection" },
+                { key: "operation", number: 2, name: "Operation", copy: "Campaign day scoring" }
+            ];
+
+            function send(event, data) {
+                var payload = JSON.stringify({ event: event, data: data || {} });
+
+                if (typeof A3API !== "undefined" && A3API.SendAlert) {
+                    A3API.SendAlert(payload);
+                }
+            }
+
+            function node(id) {
+                return document.getElementById(id);
+            }
+
+            function text(id, value) {
+                node(id).textContent = String(value);
+            }
+
+            function clsForSide(side) {
+                if (side === "WEST") {
+                    return "side-west";
+                }
+
+                if (side === "EAST") {
+                    return "side-east";
+                }
+
+                return "side-draw";
+            }
+
+            function sideName(side) {
+                if (side === "WEST") {
+                    return "BLUFOR";
+                }
+
+                if (side === "EAST") {
+                    return "OPFOR";
+                }
+
+                if (side === "BOTH") {
+                    return "BOTH";
+                }
+
+                return side || "NONE";
+            }
+
+            function formatSeconds(seconds) {
+                var s = Math.max(0, Math.floor(Number(seconds) || 0));
+                var h = Math.floor(s / 3600);
+                var m = Math.floor((s % 3600) / 60);
+                var r = s % 60;
+
+                if (h > 0) {
+                    return h + ":" + String(m).padStart(2, "0") + ":" + String(r).padStart(2, "0");
+                }
+
+                return String(m).padStart(2, "0") + ":" + String(r).padStart(2, "0");
+            }
+
+            function remainingSeconds() {
+                var elapsed = Math.floor((Date.now() - state.receivedAt) / 1000);
+                return Math.max(0, state.secondsAtReceive - elapsed);
+            }
+
+            function phaseDurationGuess(phase, seconds) {
+                if (phase === "operation") {
+                    return Math.max(3600, seconds);
+                }
+
+                return Math.max(600, seconds);
+            }
+
+            function setBar(id, value) {
+                node(id).style.width = Math.max(0, Math.min(100, value)) + "%";
+            }
+
+            function points(value) {
+                return Math.round(Number(value) || 0);
+            }
+
+            function sumResults(results, keys) {
+                return results.reduce(function (total, result) {
+                    return total + keys.reduce(function (inner, key) {
+                        return inner + points(result[key]);
+                    }, 0);
+                }, 0);
+            }
+
+            function renderPhaseStrip(snapshot) {
+                var phase = snapshot.phase || "";
+                var html = phaseMeta.map(function (item) {
+                    var active = item.key === phase ? " active" : "";
+
+                    return "<div class=\"phase-step" + active + "\">" +
+                        "<div class=\"phase-num\">Phase " + item.number + "</div>" +
+                        "<div class=\"phase-name\">" + item.name + "</div>" +
+                        "<div class=\"phase-copy\">" + item.copy + "</div>" +
+                    "</div>";
+                }).join("");
+
+                node("phaseStrip").innerHTML = html;
+            }
+
+            function renderTimer() {
+                var snapshot = state.snapshot || {};
+                var remaining = remainingSeconds();
+                var total = phaseDurationGuess(snapshot.phase, state.secondsAtReceive);
+                var elapsed = Math.max(0, total - remaining);
+                var percent = total <= 0 ? 0 : Math.round((elapsed / total) * 100);
+                var degrees = Math.max(0, Math.min(360, Math.round((elapsed / Math.max(1, total)) * 360)));
+
+                text("timer", formatSeconds(remaining));
+                text("timerSub", remaining > 0 ? "Remaining in current phase" : "Awaiting next server phase");
+                node("radial").style.setProperty("--progress", degrees + "deg");
+                text("radialText", percent + "%");
+            }
+
+            function renderScores(snapshot) {
+                var west = Number(snapshot.campaignScoreWest) || 0;
+                var east = Number(snapshot.campaignScoreEast) || 0;
+                var total = Math.max(1, west + east);
+                var results = snapshot.dayResults || [];
+                var rows = [
+                    {
+                        label: "Primary AO",
+                        west: sumResults(results, ["westPrimaryObjectiveScore", "westPrimaryCaptureScore"]),
+                        east: sumResults(results, ["eastPrimaryObjectiveScore", "eastPrimaryCaptureScore"])
+                    },
+                    {
+                        label: "Secondary AOs",
+                        west: sumResults(results, ["westSecondaryObjectiveScore", "westSecondaryCaptureScore"]),
+                        east: sumResults(results, ["eastSecondaryObjectiveScore", "eastSecondaryCaptureScore"])
+                    },
+                    {
+                        label: "Territory Cells",
+                        west: sumResults(results, ["westCellGainScore"]),
+                        east: sumResults(results, ["eastCellGainScore"])
+                    },
+                    {
+                        label: "AO Value",
+                        west: sumResults(results, ["westObjectiveValueScore"]),
+                        east: sumResults(results, ["eastObjectiveValueScore"])
+                    },
+                    {
+                        label: "Tickets Drained",
+                        west: sumResults(results, ["westTicketDrainScore"]),
+                        east: sumResults(results, ["eastTicketDrainScore"])
+                    },
+                    {
+                        label: "Sector Presence",
+                        west: sumResults(results, ["westSectorPresenceScore"]),
+                        east: sumResults(results, ["eastSectorPresenceScore"])
+                    }
+                ];
+
+                text("westScore", west);
+                text("eastScore", east);
+                setBar("westBar", (west / total) * 100);
+                setBar("eastBar", (east / total) * 100);
+
+                if (snapshot.phase === "operation") {
+                    rows.push({
+                        label: "Live Presence",
+                        west: points(snapshot.operationWestSectorPresenceScore),
+                        east: points(snapshot.operationEastSectorPresenceScore)
+                    });
+                }
+
+                node("scoreBreakdown").innerHTML = rows.map(function (row) {
+                    return "<div class=\"score-breakdown-row\">" +
+                        "<div class=\"score-source\">" + row.label + "</div>" +
+                        "<div class=\"score-points side-west\">" + row.west + "</div>" +
+                        "<div class=\"score-points side-east\">" + row.east + "</div>" +
+                    "</div>";
+                }).join("");
+            }
+
+            function renderObjective(snapshot) {
+                var phase = snapshot.phase || "";
+                var objectiveName = "";
+                var label = "Operation Objective";
+                var stateText = "Awaiting Assignment";
+                var task = "Pending";
+
+                if (phase === "frontline") {
+                    objectiveName = snapshot.plannedObjectiveName || "No objective selected";
+                    label = "Planned Objective";
+                    stateText = "Frontline Selection";
+                    task = "Planned";
+                    text("initialOwner", "TBD");
+                    text("attackSide", sideName(snapshot.plannedAttackSide));
+                    text("defendSide", sideName(snapshot.plannedDefendSide));
+                } else {
+                    objectiveName = snapshot.operationObjectiveName || "No objective selected";
+                    stateText = phase === "operation" ? "Active Operation" : "Setup Phase";
+                    task = phase === "operation" ? "Active" : "Standby";
+                    text("initialOwner", sideName(snapshot.operationInitialOwner));
+                    text("attackSide", sideName(snapshot.operationAttackSide));
+                    text("defendSide", sideName(snapshot.operationDefendSide));
+                }
+
+                text("objectiveLabel", label);
+                text("objectiveState", stateText);
+                text("taskBadge", task);
+                text("objectiveName", objectiveName);
+            }
+
+            function renderResults(snapshot) {
+                var results = snapshot.dayResults || [];
+
+                if (!results.length) {
+                    node("results").innerHTML = "<div class=\"empty\">No completed campaign days.</div>";
+                    return;
+                }
+
+                node("results").innerHTML = results.slice().reverse().map(function (result) {
+                    var winner = result.winner || "DRAW";
+                    var winnerClass = clsForSide(winner);
+
+                    return "<div class=\"result-row\">" +
+                        "<div class=\"result-day\">Day " + (result.day || "--") + "</div>" +
+                        "<div class=\"result-main\">" +
+                            "<div class=\"result-obj\">" + (result.objectiveName || "Unknown objective") + "</div>" +
+                            "<div class=\"result-score\">WEST " + (result.westScore || 0) + " / EAST " + (result.eastScore || 0) + "</div>" +
+                        "</div>" +
+                        "<div class=\"" + winnerClass + "\">" + sideName(winner) + "</div>" +
+                    "</div>";
+                }).join("");
+            }
+
+            function render() {
+                var snapshot = state.snapshot || {};
+                var phaseLabel = snapshot.phaseLabel || "Waiting";
+
+                renderPhaseStrip(snapshot);
+                text("phaseTitle", phaseLabel);
+
+                renderTimer();
+                renderScores(snapshot);
+                renderObjective(snapshot);
+                renderResults(snapshot);
+            }
+
+            window.FOOFMatch = {
+                receive: function (payload) {
+                    state.snapshot = payload.snapshot || {};
+                    state.secondsAtReceive = Number(state.snapshot.secondsRemaining) || 0;
+                    state.receivedAt = Date.now();
+                    render();
+                }
+            };
+
+            node("refresh").addEventListener("click", function () {
+                send("match::refresh", {});
+            });
+
+            node("close").addEventListener("click", function () {
+                send("match::close", {});
+            });
+
+            window.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" || event.key === "Esc") {
+                    send("match::close", {});
+                }
+            });
+
+            setInterval(renderTimer, 1000);
+            render();
+            send("match::ready", {});
+        }());
+    </script>
+</body>
+</html>

@@ -167,6 +167,10 @@ if ("command" in _snapshot) then {
     };
 };
 
+if ("match" in _snapshot) then {
+    [_snapshot get "match"] call FLO_fnc_matchApplyPersistence;
+};
+
 if ("objectives" in _snapshot) then {
     private _objectives = createHashMapFromArray (_snapshot get "objectives");
 
@@ -542,6 +546,7 @@ FLO_PersistenceLoaded = true;
 FLO_PersistenceDirty = false;
 
 [0] call FLO_fnc_resourceSendSnapshot;
+[0] call FLO_fnc_matchSendSnapshot;
 { [[west, east] select (_x isEqualTo "EAST")] call FLO_fnc_commandBroadcastSide; } forEach ["WEST", "EAST"];
 
 private _loadedCellCount = 0;

@@ -8,6 +8,7 @@ if (!isServer) exitWith {};
         && {!isNil "FLO_ResourceBalances"}
         && {!isNil "FLO_TicketBalances"}
         && {!isNil "FLO_CommandSideState"}
+        && {!isNil "FLO_MatchState"}
         && {!isNil "FLO_FOBs"}
         && {!isNil "FLO_StorePendingVehicles"}
         && {!isNil "FLO_StorePurchasedVehicles"}
