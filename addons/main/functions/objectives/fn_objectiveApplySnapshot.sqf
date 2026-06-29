@@ -13,3 +13,7 @@ if (_fullRefresh) then {
 FLO_ObjectiveClientLastSnapshot = values FLO_ObjectiveClientObjectiveRecords;
 
 [_snapshot, _fullRefresh] call FLO_fnc_objectiveUpdateMapMarkers;
+
+if (!isNull (findDisplay FLO_ObjectiveAreaDialogIdd)) then {
+    [] call FLO_fnc_objectiveUpdateAreaDialog;
+};

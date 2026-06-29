@@ -103,7 +103,7 @@ diag_log format [
     ["faction", "free-credit"] select _freeUpgradeUsed
 ];
 
-[false, [], [_objectiveId]] call FLO_fnc_objectivePublishSnapshot;
+[_freeUpgradeUsed, [], [_objectiveId]] call FLO_fnc_objectivePublishSnapshot;
 ["objectiveUpgrade"] call FLO_fnc_persistenceScheduleSave;
 
 [
