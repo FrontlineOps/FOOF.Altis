@@ -4,6 +4,9 @@ if !(isClass (configFile >> "CfgPatches" >> "acre_main")) exitWith {};
 [
     {!isNull player},
     {
+        FLO_AcreLastGroup = grpNull;
+        FLO_AcreLastShortRangeChannel = 0;
+
         [true, true] call acre_api_fnc_setupMission;
 
         private _shortRangeLabels = [
@@ -32,7 +35,14 @@ if !(isClass (configFile >> "CfgPatches" >> "acre_main")) exitWith {};
         ];
         private _presetNames = ["default", "default2", "default3", "default4"];
         private _shortRangeRadios = ["ACRE_PRC343", "ACRE_BF888S"];
-        private _commandRadios = ["ACRE_PRC148", "ACRE_PRC152", "ACRE_PRC77", "ACRE_PRC117F", "ACRE_SEM52SL", "ACRE_SEM70"];
+        private _commandRadios = [
+            ["ACRE_PRC148", _commandLabels],
+            ["ACRE_PRC152", _commandLabels],
+            ["ACRE_PRC77", _commandLabels select [0, 2]],
+            ["ACRE_PRC117F", _commandLabels],
+            ["ACRE_SEM52SL", _commandLabels],
+            ["ACRE_SEM70", _commandLabels]
+        ];
 
         {
             private _radioType = _x;
@@ -46,13 +56,14 @@ if !(isClass (configFile >> "CfgPatches" >> "acre_main")) exitWith {};
         } forEach _shortRangeRadios;
 
         {
-            private _radioType = _x;
+            _x params ["_radioType", "_labels"];
+
             {
                 private _preset = _x;
                 {
                     _x params ["_channel", "_label"];
                     [_radioType, _preset, _channel, "label", _label] call acre_api_fnc_setPresetChannelField;
-                } forEach _commandLabels;
+                } forEach _labels;
             } forEach _presetNames;
         } forEach _commandRadios;
 
