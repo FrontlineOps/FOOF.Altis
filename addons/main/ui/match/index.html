@@ -399,11 +399,40 @@
             overflow: hidden;
         }
 
+        .result-entry {
+            min-width: 0;
+        }
+
+        .result-entry summary {
+            list-style: none;
+            cursor: pointer;
+        }
+
+        .result-entry summary::-webkit-details-marker {
+            display: none;
+        }
+
         .result-row {
             display: grid;
-            grid-template-columns: 74px minmax(0, 1fr) 96px;
+            grid-template-columns: 74px minmax(0, 1fr) 96px 24px;
             gap: 8px;
             align-items: center;
+        }
+
+        .result-row::after {
+            content: "+";
+            color: #20d6ff;
+            font-size: 18px;
+            font-weight: 900;
+            text-align: right;
+        }
+
+        .result-entry[open] .result-row::after {
+            content: "-";
+        }
+
+        .result-entry[open] .result-row {
+            border-bottom-color: rgba(32, 214, 255, 0.42);
         }
 
         .result-day {
@@ -432,6 +461,16 @@
             font-size: 12px;
             font-weight: 800;
             text-transform: uppercase;
+        }
+
+        .result-breakdown {
+            display: grid;
+            gap: 6px;
+            padding: 8px 0 2px;
+        }
+
+        .result-breakdown .score-breakdown-head {
+            margin-top: 0;
         }
 
         .empty {
@@ -504,7 +543,7 @@
                 <article class="panel">
                     <div class="panel-header">
                         <div>
-                            <div class="panel-label">Campaign</div>
+                            <div class="panel-label">Current Operation</div>
                             <div class="panel-title">Scoreboard</div>
                         </div>
                     </div>
@@ -652,12 +691,51 @@
                 return Math.round(Number(value) || 0);
             }
 
-            function sumResults(results, keys) {
-                return results.reduce(function (total, result) {
-                    return total + keys.reduce(function (inner, key) {
-                        return inner + points(result[key]);
-                    }, 0);
-                }, 0);
+            function scoreRows(record) {
+                record = record || {};
+
+                return [
+                    {
+                        label: "Primary AO",
+                        west: points(record.westPrimaryObjectiveScore) + points(record.westPrimaryCaptureScore),
+                        east: points(record.eastPrimaryObjectiveScore) + points(record.eastPrimaryCaptureScore)
+                    },
+                    {
+                        label: "Secondary AOs",
+                        west: points(record.westSecondaryObjectiveScore) + points(record.westSecondaryCaptureScore),
+                        east: points(record.eastSecondaryObjectiveScore) + points(record.eastSecondaryCaptureScore)
+                    },
+                    {
+                        label: "Territory Cells",
+                        west: points(record.westCellGainScore),
+                        east: points(record.eastCellGainScore)
+                    },
+                    {
+                        label: "AO Value",
+                        west: points(record.westObjectiveValueScore),
+                        east: points(record.eastObjectiveValueScore)
+                    },
+                    {
+                        label: "Tickets Drained",
+                        west: points(record.westTicketDrainScore),
+                        east: points(record.eastTicketDrainScore)
+                    },
+                    {
+                        label: "Sector Presence",
+                        west: points(record.westSectorPresenceScore),
+                        east: points(record.eastSectorPresenceScore)
+                    }
+                ];
+            }
+
+            function renderScoreRows(rows) {
+                return rows.map(function (row) {
+                    return "<div class=\"score-breakdown-row\">" +
+                        "<div class=\"score-source\">" + row.label + "</div>" +
+                        "<div class=\"score-points side-west\">" + points(row.west) + "</div>" +
+                        "<div class=\"score-points side-east\">" + points(row.east) + "</div>" +
+                    "</div>";
+                }).join("");
             }
 
             function renderPhaseStrip(snapshot) {
@@ -690,63 +768,18 @@
             }
 
             function renderScores(snapshot) {
-                var west = Number(snapshot.campaignScoreWest) || 0;
-                var east = Number(snapshot.campaignScoreEast) || 0;
+                var preview = snapshot.operationScorePreview || {};
+                var activeOperation = snapshot.phase === "operation";
+                var west = activeOperation ? points(preview.westScore) : 0;
+                var east = activeOperation ? points(preview.eastScore) : 0;
                 var total = Math.max(1, west + east);
-                var results = snapshot.dayResults || [];
-                var rows = [
-                    {
-                        label: "Primary AO",
-                        west: sumResults(results, ["westPrimaryObjectiveScore", "westPrimaryCaptureScore"]),
-                        east: sumResults(results, ["eastPrimaryObjectiveScore", "eastPrimaryCaptureScore"])
-                    },
-                    {
-                        label: "Secondary AOs",
-                        west: sumResults(results, ["westSecondaryObjectiveScore", "westSecondaryCaptureScore"]),
-                        east: sumResults(results, ["eastSecondaryObjectiveScore", "eastSecondaryCaptureScore"])
-                    },
-                    {
-                        label: "Territory Cells",
-                        west: sumResults(results, ["westCellGainScore"]),
-                        east: sumResults(results, ["eastCellGainScore"])
-                    },
-                    {
-                        label: "AO Value",
-                        west: sumResults(results, ["westObjectiveValueScore"]),
-                        east: sumResults(results, ["eastObjectiveValueScore"])
-                    },
-                    {
-                        label: "Tickets Drained",
-                        west: sumResults(results, ["westTicketDrainScore"]),
-                        east: sumResults(results, ["eastTicketDrainScore"])
-                    },
-                    {
-                        label: "Sector Presence",
-                        west: sumResults(results, ["westSectorPresenceScore"]),
-                        east: sumResults(results, ["eastSectorPresenceScore"])
-                    }
-                ];
 
                 text("westScore", west);
                 text("eastScore", east);
                 setBar("westBar", (west / total) * 100);
                 setBar("eastBar", (east / total) * 100);
 
-                if (snapshot.phase === "operation") {
-                    rows.push({
-                        label: "Live Presence",
-                        west: points(snapshot.operationWestSectorPresenceScore),
-                        east: points(snapshot.operationEastSectorPresenceScore)
-                    });
-                }
-
-                node("scoreBreakdown").innerHTML = rows.map(function (row) {
-                    return "<div class=\"score-breakdown-row\">" +
-                        "<div class=\"score-source\">" + row.label + "</div>" +
-                        "<div class=\"score-points side-west\">" + row.west + "</div>" +
-                        "<div class=\"score-points side-east\">" + row.east + "</div>" +
-                    "</div>";
-                }).join("");
+                node("scoreBreakdown").innerHTML = renderScoreRows(scoreRows(activeOperation ? preview : {}));
             }
 
             function renderObjective(snapshot) {
@@ -793,14 +826,24 @@
                     var winner = result.winner || "DRAW";
                     var winnerClass = clsForSide(winner);
 
-                    return "<div class=\"result-row\">" +
+                    return "<details class=\"result-entry\">" +
+                        "<summary class=\"result-row\">" +
                         "<div class=\"result-day\">Day " + (result.day || "--") + "</div>" +
                         "<div class=\"result-main\">" +
                             "<div class=\"result-obj\">" + (result.objectiveName || "Unknown objective") + "</div>" +
                             "<div class=\"result-score\">WEST " + (result.westScore || 0) + " / EAST " + (result.eastScore || 0) + "</div>" +
                         "</div>" +
                         "<div class=\"" + winnerClass + "\">" + sideName(winner) + "</div>" +
-                    "</div>";
+                        "</summary>" +
+                        "<div class=\"result-breakdown\">" +
+                            "<div class=\"score-breakdown-head\">" +
+                                "<span>Source</span>" +
+                                "<span>WEST</span>" +
+                                "<span>EAST</span>" +
+                            "</div>" +
+                            renderScoreRows(scoreRows(result)) +
+                        "</div>" +
+                    "</details>";
                 }).join("");
             }
 

@@ -1,5 +1,10 @@
 private _secondsRemaining = round (((FLO_MatchState get "phaseEndsAt") - diag_tickTime) max 0);
 private _results = +FLO_MatchDayResults;
+private _operationScorePreview = createHashMap;
+
+if ((FLO_MatchState get "phase") isEqualTo "operation") then {
+    _operationScorePreview = [] call FLO_fnc_matchScoreCampaignDay;
+};
 
 if ((count _results) > 6) then {
     _results = _results select [(count _results) - 6, 6];
@@ -41,7 +46,6 @@ createHashMapFromArray [
     ["plannedAttackSide", FLO_MatchState get "plannedAttackSide"],
     ["plannedDefendSide", FLO_MatchState get "plannedDefendSide"],
     ["nextOffensiveSide", FLO_MatchState get "nextOffensiveSide"],
-    ["campaignScoreWest", FLO_MatchState get "campaignScoreWest"],
-    ["campaignScoreEast", FLO_MatchState get "campaignScoreEast"],
+    ["operationScorePreview", _operationScorePreview],
     ["dayResults", _results]
 ]
